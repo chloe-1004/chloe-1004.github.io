@@ -17,20 +17,21 @@
     --green: #4ade80; --green-dim: #1a3a25;
     --red: #f87171; --red-dim: #3a1a1a;
     --blue: #60a5fa; --blue-dim: #1a2a3a;
+    --yellow: #fbbf24; --yellow-dim: #3a2e0a;
     --font: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
   }
   html,body { height:100%; background:var(--bg); color:var(--text); font-family:var(--font); font-size:14px; line-height:1.6; }
   .app { display:flex; height:100vh; overflow:hidden; }
 
-  /* Sidebar */
+  /* ── Sidebar ── */
   .sidebar { width:280px; min-width:280px; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; }
   .sb-top { padding:18px 18px 14px; border-bottom:1px solid var(--border); }
   .logo { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
   .logo-box { width:22px; height:22px; background:var(--text); border-radius:5px; display:flex; align-items:center; justify-content:center; }
   .logo-box svg { width:12px; height:12px; }
   .logo-text { font-size:13px; font-weight:500; }
-  .tab-sw { display:flex; background:var(--surface2); border-radius:7px; padding:3px; }
-  .tsb { flex:1; padding:6px 0; font-size:11px; font-weight:500; font-family:var(--font); border:none; border-radius:5px; cursor:pointer; color:var(--text-m); background:transparent; transition:all .15s; }
+  .tab-sw { display:flex; background:var(--surface2); border-radius:7px; padding:3px; gap:2px; }
+  .tsb { flex:1; padding:6px 0; font-size:11px; font-weight:500; font-family:var(--font); border:none; border-radius:5px; cursor:pointer; color:var(--text-m); background:transparent; transition:all .15s; white-space:nowrap; }
   .tsb.on { background:var(--bg); color:var(--text); }
   .sb-body { flex:1; overflow-y:auto; padding:14px; }
   .sb-body::-webkit-scrollbar { width:3px; }
@@ -53,10 +54,10 @@
   .run-btn.loading .spin-ico { display:block; }
   @keyframes spin { to{transform:rotate(360deg)} }
 
-  /* API Key banner */
-  .api-banner { margin:0 14px 12px; padding:10px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:7px; }
+  /* ── API Key ── */
+  .api-banner { margin:0 14px 0; padding:10px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:7px; }
   .api-banner-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
-  .api-dot { width:6px; height:6px; border-radius:50%; background:var(--red); flex-shrink:0; }
+  .api-dot { width:6px; height:6px; border-radius:50%; background:var(--red); flex-shrink:0; transition:background .2s; }
   .api-dot.ok { background:var(--green); }
   .api-lbl { font-size:11px; font-weight:500; color:var(--text-s); }
   .api-input-wrap { position:relative; }
@@ -66,8 +67,9 @@
   .api-hint { font-size:10px; color:var(--text-m); margin-top:4px; }
   .api-hint a { color:var(--blue); text-decoration:none; }
   .api-hint a:hover { text-decoration:underline; }
+  .api-divr { height:1px; background:var(--border); margin:12px 14px; }
 
-  /* Main */
+  /* ── Main ── */
   .main { flex:1; overflow-y:auto; display:flex; flex-direction:column; }
   .main::-webkit-scrollbar { width:4px; }
   .main::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
@@ -76,27 +78,27 @@
   .mh-count { font-size:12px; color:var(--text-m); font-family:var(--mono); }
   .mc { padding:20px 24px; flex:1; }
 
-  /* Empty */
+  /* ── Empty ── */
   .empty { display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 56px); text-align:center; color:var(--text-m); }
   .e-icon { width:44px; height:44px; border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
   .empty h3 { font-size:14px; font-weight:500; color:var(--text-s); margin-bottom:5px; }
   .empty p { font-size:12px; line-height:1.7; max-width:240px; }
 
-  /* Skeleton */
+  /* ── Skeleton ── */
   .skel-list { display:flex; flex-direction:column; gap:10px; }
   .skel { background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:18px; animation:pulse 1.4s ease-in-out infinite; }
   .sl { height:11px; background:var(--surface2); border-radius:3px; margin-bottom:8px; }
   .sl.w40{width:40%} .sl.w60{width:60%} .sl.w80{width:80%}
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
 
-  /* Summary */
+  /* ── Summary ── */
   .sum-card { background:var(--surface2); border:1px solid var(--border); border-radius:9px; padding:16px; margin-bottom:16px; }
   .sum-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
   .sum-label { font-size:11px; font-weight:500; color:var(--text-s); letter-spacing:.04em; }
   .reco-tag { font-size:11px; font-weight:500; padding:2px 9px; border-radius:99px; font-family:var(--mono); background:var(--green-dim); color:var(--green); border:1px solid #2a5a35; }
   .sum-body { font-size:13px; color:var(--text-s); line-height:1.75; }
 
-  /* Service cards */
+  /* ── Service cards ── */
   .svc-list { display:flex; flex-direction:column; gap:10px; }
   .svc-card { background:var(--surface); border:1px solid var(--border); border-radius:9px; overflow:hidden; transition:border-color .15s; animation:fadeUp .25s ease forwards; opacity:0; }
   .svc-card:hover { border-color:var(--border-h); }
@@ -129,7 +131,7 @@
   .ins-tag { font-size:10px; font-weight:500; font-family:var(--mono); color:var(--accent); background:#4a4035; padding:2px 7px; border-radius:3px; flex-shrink:0; margin-top:2px; }
   .ins-text { font-size:12px; color:#c0b89a; line-height:1.6; }
 
-  /* UI grid */
+  /* ── UI grid ── */
   .ui-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(185px,1fr)); gap:9px; }
   .ui-card { background:var(--surface); border:1px solid var(--border); border-radius:9px; overflow:hidden; cursor:pointer; transition:all .15s; animation:fadeUp .2s ease forwards; opacity:0; }
   .ui-card:hover { border-color:var(--border-h); transform:translateY(-1px); }
@@ -145,8 +147,34 @@
   .ui-link:hover { text-decoration:underline; }
   .ui-desc { font-size:11px; color:var(--text-m); margin-top:5px; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 
+  /* ── History ── */
+  .hist-list { display:flex; flex-direction:column; gap:8px; }
+  .hist-item { background:var(--surface); border:1px solid var(--border); border-radius:9px; overflow:hidden; cursor:pointer; transition:border-color .15s; animation:fadeUp .2s ease forwards; opacity:0; }
+  .hist-item:hover { border-color:var(--border-h); }
+  .hist-head { padding:12px 14px; display:flex; align-items:center; gap:10px; }
+  .hist-type { font-size:10px; font-weight:500; padding:2px 7px; border-radius:3px; font-family:var(--mono); flex-shrink:0; }
+  .ht-func { background:var(--blue-dim); color:var(--blue); }
+  .ht-ui { background:var(--yellow-dim); color:var(--yellow); }
+  .hist-q { font-size:13px; font-weight:500; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .hist-meta { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .hist-time { font-size:11px; color:var(--text-m); font-family:var(--mono); }
+  .hist-del { width:20px; height:20px; border:none; background:none; color:var(--text-m); cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:4px; padding:0; }
+  .hist-del:hover { background:var(--red-dim); color:var(--red); }
+  .hist-preview { padding:0 14px 12px; font-size:12px; color:var(--text-m); line-height:1.5; }
+  .hist-count { font-size:11px; font-family:var(--mono); color:var(--text-m); }
+
+  /* History detail view */
+  .hist-back { display:flex; align-items:center; gap:8px; margin-bottom:16px; cursor:pointer; color:var(--text-s); font-size:13px; width:fit-content; }
+  .hist-back:hover { color:var(--text); }
+  .hist-back svg { flex-shrink:0; }
+
   /* Error */
   .err { display:flex; flex-direction:column; align-items:center; text-align:center; padding:4rem 2rem; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 16px; font-size:13px; color:var(--text-s); display:none; align-items:center; gap:8px; z-index:999; animation:fadeUp .2s ease; }
+  .toast.show { display:flex; }
+  .toast-dot { width:6px; height:6px; border-radius:50%; background:var(--green); flex-shrink:0; }
 </style>
 </head>
 <body>
@@ -162,19 +190,21 @@
         <span class="logo-text">Design Research</span>
       </div>
       <div class="tab-sw">
-        <button class="tsb on" onclick="switchTab('func')">기능 레퍼런스</button>
-        <button class="tsb" onclick="switchTab('ui')">UI 레퍼런스</button>
+        <button class="tsb on" onclick="switchTab('func')">기능</button>
+        <button class="tsb" onclick="switchTab('ui')">UI</button>
+        <button class="tsb" onclick="switchTab('hist')">히스토리</button>
       </div>
     </div>
 
-    <!-- API Key Section -->
-    <div class="api-banner" id="api-banner">
+    <!-- API Key -->
+    <div style="height:12px;"></div>
+    <div class="api-banner">
       <div class="api-banner-row">
         <span class="api-dot" id="api-dot"></span>
-        <span class="api-lbl" id="api-lbl">Anthropic API 키 필요</span>
+        <span class="api-lbl" id="api-lbl">Gemini API 키 필요</span>
       </div>
       <div class="api-input-wrap">
-        <input type="password" id="api-key-input" placeholder="sk-ant-..." oninput="onKeyInput()" autocomplete="off">
+        <input type="password" id="api-key-input" placeholder="AIza..." oninput="onKeyInput()" autocomplete="off">
         <button class="api-eye" onclick="toggleKeyVisibility()" title="보기/숨기기">
           <svg id="eye-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4">
             <path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/>
@@ -182,9 +212,11 @@
           </svg>
         </button>
       </div>
-      <div class="api-hint">키는 브라우저 메모리에만 저장됩니다 &nbsp;·&nbsp; <a href="https://console.anthropic.com/settings/keys" target="_blank">키 발급 ↗</a></div>
+      <div class="api-hint">브라우저 메모리 저장 &nbsp;·&nbsp; <a href="https://aistudio.google.com/app/apikey" target="_blank">무료 키 발급 ↗</a></div>
     </div>
+    <div class="api-divr"></div>
 
+    <!-- Func panel -->
     <div class="sb-body" id="p-func">
       <div class="fl">
         <div class="fl-lbl">찾는 기능</div>
@@ -214,6 +246,7 @@
       </div>
     </div>
 
+    <!-- UI panel -->
     <div class="sb-body" id="p-ui" style="display:none;">
       <div class="fl">
         <div class="fl-lbl">UI 스타일 검색</div>
@@ -242,7 +275,16 @@
       </div>
     </div>
 
-    <div class="sb-foot">
+    <!-- History panel (sidebar) -->
+    <div class="sb-body" id="p-hist" style="display:none;">
+      <div style="font-size:12px;color:var(--text-m);line-height:1.7;">
+        저장된 리서치를 클릭하면<br>결과를 다시 볼 수 있어요.
+      </div>
+      <div class="divr"></div>
+      <div id="hist-sb-list"></div>
+    </div>
+
+    <div class="sb-foot" id="sb-foot">
       <button class="run-btn" id="rbtn" onclick="run()">
         <div class="spin-ico"></div>
         <span id="rbtn-lbl">리서치 시작</span>
@@ -266,7 +308,7 @@
           </svg>
         </div>
         <h3>기능 레퍼런스 리서치</h3>
-        <p>API 키를 입력하고, 찾고 싶은 기능과 타겟 사용자를 입력해 리서치를 시작하세요.</p>
+        <p>Gemini API 키를 입력하고, 찾고 싶은 기능과 타겟 사용자를 입력해 리서치를 시작하세요.</p>
       </div>
       <div class="empty" id="e-ui" style="display:none;">
         <div class="e-icon">
@@ -278,224 +320,405 @@
         <h3>UI 레퍼런스 수집</h3>
         <p>원하는 UI 스타일을 입력하면 레퍼런스 이미지를 모아드려요.</p>
       </div>
+      <div class="empty" id="e-hist" style="display:none;">
+        <div class="e-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.2">
+            <circle cx="9" cy="9" r="7"/><path d="M9 5v4l3 3"/>
+          </svg>
+        </div>
+        <h3>저장된 리서치 없음</h3>
+        <p>리서치를 완료하면 여기에 자동으로 저장돼요.</p>
+      </div>
     </div>
   </main>
 </div>
 
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg">저장됐어요</span>
+</div>
+
 <script>
-  const API = 'https://api.anthropic.com/v1/messages';
-  let tab = 'func';
-  let apiKey = '';
+// ─── State ───────────────────────────────────────────────
+let tab = 'func';
+let apiKey = '';
+const HIST_KEY = 'design_research_history';
 
-  // --- API Key ---
-  function onKeyInput() {
-    apiKey = document.getElementById('api-key-input').value.trim();
-    const dot = document.getElementById('api-dot');
-    const lbl = document.getElementById('api-lbl');
-    if (apiKey.startsWith('sk-ant-') && apiKey.length > 20) {
-      dot.classList.add('ok');
-      lbl.textContent = 'API 키 설정됨';
-    } else {
-      dot.classList.remove('ok');
-      lbl.textContent = apiKey ? '유효하지 않은 키 형식' : 'Anthropic API 키 필요';
-    }
+// ─── History storage ──────────────────────────────────────
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveHistory(items) {
+  localStorage.setItem(HIST_KEY, JSON.stringify(items));
+}
+function addToHistory(entry) {
+  const items = loadHistory();
+  items.unshift({ id: Date.now(), ...entry });
+  if (items.length > 50) items.splice(50); // max 50개 보관
+  saveHistory(items);
+  renderHistSidebar();
+}
+function deleteHistory(id) {
+  const items = loadHistory().filter(i => i.id !== id);
+  saveHistory(items);
+  renderHistSidebar();
+  if (tab === 'hist') renderHistPage();
+}
+
+// ─── Toast ────────────────────────────────────────────────
+function showToast(msg = '저장됐어요') {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ─── API Key ──────────────────────────────────────────────
+function onKeyInput() {
+  apiKey = document.getElementById('api-key-input').value.trim();
+  const dot = document.getElementById('api-dot');
+  const lbl = document.getElementById('api-lbl');
+  if (apiKey.startsWith('AIza') && apiKey.length > 20) {
+    dot.classList.add('ok');
+    lbl.textContent = 'API 키 설정됨';
+  } else {
+    dot.classList.remove('ok');
+    lbl.textContent = apiKey ? '유효하지 않은 키 형식' : 'Gemini API 키 필요';
   }
-
-  function toggleKeyVisibility() {
-    const inp = document.getElementById('api-key-input');
-    const icon = document.getElementById('eye-icon');
-    if (inp.type === 'password') {
-      inp.type = 'text';
-      icon.innerHTML = '<path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/><circle cx="7" cy="7" r="1.5"/><line x1="2" y1="2" x2="12" y2="12"/>';
-    } else {
-      inp.type = 'password';
-      icon.innerHTML = '<path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/><circle cx="7" cy="7" r="1.5"/>';
-    }
+}
+function toggleKeyVisibility() {
+  const inp = document.getElementById('api-key-input');
+  const icon = document.getElementById('eye-icon');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    icon.innerHTML = '<path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/><circle cx="7" cy="7" r="1.5"/><line x1="2" y1="2" x2="12" y2="12" stroke-width="1.4"/>';
+  } else {
+    inp.type = 'password';
+    icon.innerHTML = '<path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/><circle cx="7" cy="7" r="1.5"/>';
   }
+}
 
-  // --- Tab ---
-  function switchTab(t) {
-    tab = t;
-    document.querySelectorAll('.tsb').forEach((b,i) => b.classList.toggle('on', (i===0&&t==='func')||(i===1&&t==='ui')));
-    document.getElementById('p-func').style.display = t==='func'?'block':'none';
-    document.getElementById('p-ui').style.display = t==='ui'?'block':'none';
+// ─── Tab ──────────────────────────────────────────────────
+function switchTab(t) {
+  tab = t;
+  document.querySelectorAll('.tsb').forEach((b,i) => {
+    b.classList.toggle('on', (i===0&&t==='func')||(i===1&&t==='ui')||(i===2&&t==='hist'));
+  });
+  document.getElementById('p-func').style.display = t==='func'?'block':'none';
+  document.getElementById('p-ui').style.display = t==='ui'?'block':'none';
+  document.getElementById('p-hist').style.display = t==='hist'?'block':'none';
+  document.getElementById('sb-foot').style.display = t==='hist'?'none':'block';
+
+  if (t === 'hist') {
+    renderHistPage();
+    document.getElementById('mh-title').textContent = '리서치 히스토리';
+    document.getElementById('mh-count').textContent = `${loadHistory().length}개`;
+  } else {
+    clearResults();
     document.getElementById('e-func').style.display = t==='func'?'flex':'none';
     document.getElementById('e-ui').style.display = t==='ui'?'flex':'none';
-    clearResults();
+    document.getElementById('e-hist').style.display = 'none';
   }
+}
 
-  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => c.classList.toggle('on')));
+document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => c.classList.toggle('on')));
+function chips(g) { return [...document.querySelectorAll(`.chip.on[data-g="${g}"]`)].map(c=>c.dataset.v); }
 
-  function chips(g) { return [...document.querySelectorAll(`.chip.on[data-g="${g}"]`)].map(c=>c.dataset.v); }
+function clearResults() {
+  const r = document.getElementById('ra');
+  if (r) r.remove();
+  document.getElementById('mh-count').textContent = '';
+  document.getElementById('mh-title').textContent = '결과';
+}
 
-  function clearResults() {
-    const r = document.getElementById('ra');
-    if (r) r.remove();
-    document.getElementById('mh-count').textContent = '';
-    document.getElementById('mh-title').textContent = '결과';
+function setLoad(on) {
+  const b = document.getElementById('rbtn');
+  b.disabled = on;
+  b.classList.toggle('loading', on);
+  document.getElementById('rbtn-lbl').textContent = on ? '분석 중' : '리서치 시작';
+}
+
+function showSkel() {
+  document.getElementById('e-func').style.display='none';
+  document.getElementById('e-ui').style.display='none';
+  clearResults();
+  const mc = document.getElementById('mc');
+  const d = document.createElement('div'); d.id='ra';
+  d.innerHTML = `<div class="skel-list">${Array(4).fill(`<div class="skel"><div class="sl w40"></div><div class="sl w80"></div><div class="sl w60"></div></div>`).join('')}</div>`;
+  mc.appendChild(d);
+}
+
+// ─── API Call (Gemini) ────────────────────────────────────
+async function callAPI(prompt) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 3000 }
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(()=>({}));
+    throw new Error(err?.error?.message || `API 오류 (${res.status})`);
   }
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const cleaned = text.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
+  return JSON.parse(cleaned);
+}
 
-  function setLoad(on) {
-    const b = document.getElementById('rbtn');
-    b.disabled = on;
-    b.classList.toggle('loading', on);
-    document.getElementById('rbtn-lbl').textContent = on ? '분석 중' : '리서치 시작';
+// ─── Run ──────────────────────────────────────────────────
+async function run() {
+  if (!apiKey || !apiKey.startsWith('AIza')) {
+    const inp = document.getElementById('api-key-input');
+    inp.focus();
+    inp.style.borderColor = 'var(--red)';
+    setTimeout(() => inp.style.borderColor = '', 1500);
+    return;
   }
-
-  function showSkel() {
-    document.getElementById('e-func').style.display='none';
-    document.getElementById('e-ui').style.display='none';
-    clearResults();
-    const mc = document.getElementById('mc');
-    const d = document.createElement('div'); d.id='ra';
-    d.innerHTML = `<div class="skel-list">${Array(4).fill(`<div class="skel"><div class="sl w40"></div><div class="sl w80"></div><div class="sl w60"></div></div>`).join('')}</div>`;
-    mc.appendChild(d);
+  if (tab==='func') {
+    const q = document.getElementById('func-q').value.trim();
+    if (!q) { document.getElementById('func-q').focus(); return; }
+    await runFunc(q);
+  } else {
+    const q = document.getElementById('ui-q').value.trim();
+    if (!q) { document.getElementById('ui-q').focus(); return; }
+    await runUI(q);
   }
+}
 
-  async function run() {
-    if (!apiKey || !apiKey.startsWith('sk-ant-')) {
-      document.getElementById('api-key-input').focus();
-      document.getElementById('api-key-input').style.borderColor = 'var(--red)';
-      setTimeout(() => document.getElementById('api-key-input').style.borderColor = '', 1500);
-      return;
-    }
-    if (tab==='func') {
-      const q = document.getElementById('func-q').value.trim();
-      if (!q) { document.getElementById('func-q').focus(); return; }
-      await runFunc(q);
-    } else {
-      const q = document.getElementById('ui-q').value.trim();
-      if (!q) { document.getElementById('ui-q').focus(); return; }
-      await runUI(q);
-    }
-  }
-
-  async function callAPI(system, user) {
-    const res = await fetch(API, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:2500, system, messages:[{role:'user',content:user}] })
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(()=>({}));
-      throw new Error(err?.error?.message || `API 오류 (${res.status})`);
-    }
-    const data = await res.json();
-    const text = (data.content||[]).map(b=>b.text||'').join('');
-    return JSON.parse(text.replace(/```json|```/g,'').trim());
-  }
-
-  async function runFunc(q) {
-    const target = document.getElementById('func-t').value.trim();
-    const pf = chips('pf'); const st = chips('st');
-    setLoad(true); showSkel();
-    document.getElementById('mh-title').textContent = '분석 중...';
-    try {
-      const sys = `당신은 UX 리서처입니다. 아래 형식의 순수 JSON만 반환하세요 (마크다운 없이):
+// ─── Func ─────────────────────────────────────────────────
+async function runFunc(q) {
+  const target = document.getElementById('func-t').value.trim();
+  const pf = chips('pf'); const st = chips('st');
+  setLoad(true); showSkel();
+  document.getElementById('mh-title').textContent = '분석 중...';
+  try {
+    const prompt = `당신은 UX 리서처입니다. 아래 형식의 순수 JSON만 반환하세요 (마크다운 코드블록 없이, JSON만):
 {"summary":"전체 인사이트 2-3문장","recommended":"추천 서비스명","services":[{"name":"서비스명","type":"web|app|both","icon":"영문2글자","desc":"기능 제공 방식 한 문장","path":"접근 경로","links":[{"label":"링크명","url":"https://..."}],"pros":["장점1","장점2","장점3"],"cons":["단점1","단점2"],"insight":"타겟 사용자 기준 UX 평가"}]}
-서비스 5-7개, 실제 존재하는 서비스와 URL만 사용.`;
-      const parsed = await callAPI(sys, `기능: ${q}\n타겟: ${target||'일반 사용자'}\n플랫폼: ${pf.join(', ')}\n서비스 유형: ${st.join(', ')}`);
-      renderFunc(parsed, q);
-    } catch(e) { showErr(e.message); }
-    finally { setLoad(false); }
-  }
+서비스 5-7개, 실제 존재하는 서비스와 URL만 사용.
 
-  function renderFunc(d, q) {
-    clearResults();
-    document.getElementById('mh-title').textContent = `${q} 레퍼런스`;
-    document.getElementById('mh-count').textContent = `${d.services?.length||0}개 서비스`;
-    const mc = document.getElementById('mc');
-    const ra = document.createElement('div'); ra.id='ra';
-    if (d.summary) {
-      ra.innerHTML = `<div class="sum-card"><div class="sum-head"><span class="sum-label">종합 인사이트</span>${d.recommended?`<span class="reco-tag">추천: ${d.recommended}</span>`:''}</div><div class="sum-body">${d.summary}</div></div>`;
-    }
-    const list = document.createElement('div'); list.className='svc-list';
-    (d.services||[]).forEach((s,i) => {
-      const tc = s.type==='web'?'bw':s.type==='app'?'ba':'bb';
-      const tl = s.type==='web'?'Web':s.type==='app'?'App':'Web+App';
-      const el = document.createElement('div'); el.className='svc-card';
-      el.style.animationDelay = `${i*0.05}s`;
-      el.innerHTML = `
-        <div class="svc-top">
-          <div class="svc-ico">${s.icon||s.name.slice(0,2).toUpperCase()}</div>
-          <div class="svc-info">
-            <div class="svc-nr"><span class="svc-name">${s.name}</span><span class="badge ${tc}">${tl}</span></div>
-            <div class="svc-desc">${s.desc||''}</div>
-          </div>
-        </div>
-        ${s.path?`<div class="svc-path"><span class="path-lbl">경로</span>${s.path}</div>`:''}
-        ${(s.links||[]).length?`<div class="svc-links">${s.links.map(l=>`<a class="svc-a" href="${l.url}" target="_blank">${l.label} ↗</a>`).join('')}</div>`:''}
-        <div class="pc-row">
-          <div class="pc-col pros"><div class="pc-lbl">장점</div><ul class="pc-ul">${(s.pros||[]).map(p=>`<li>${p}</li>`).join('')}</ul></div>
-          <div class="pc-col cons"><div class="pc-lbl">단점</div><ul class="pc-ul">${(s.cons||[]).map(c=>`<li>${c}</li>`).join('')}</ul></div>
-        </div>
-        ${s.insight?`<div class="ins-row"><span class="ins-tag">인사이트</span><span class="ins-text">${s.insight}</span></div>`:''}`;
-      list.appendChild(el);
-    });
-    ra.appendChild(list);
-    mc.appendChild(ra);
-  }
+기능: ${q}
+타겟: ${target||'일반 사용자'}
+플랫폼: ${pf.join(', ')}
+서비스 유형: ${st.join(', ')}`;
 
-  async function runUI(q) {
-    const sk = chips('sk'); const us = chips('us');
-    setLoad(true); showSkel();
-    document.getElementById('mh-title').textContent = '수집 중...';
-    try {
-      const sys = `당신은 UI 디자인 리서처입니다. 순수 JSON만 반환 (마크다운 없이):
+    const parsed = await callAPI(prompt);
+    renderFunc(parsed, q);
+    addToHistory({ type:'func', query:q, target, data:parsed, time: new Date().toISOString() });
+    showToast('리서치 결과가 히스토리에 저장됐어요');
+  } catch(e) { showErr(e.message); }
+  finally { setLoad(false); }
+}
+
+function renderFunc(d, q, fromHistory=false) {
+  clearResults();
+  document.getElementById('e-func').style.display='none';
+  document.getElementById('e-ui').style.display='none';
+  document.getElementById('e-hist').style.display='none';
+  document.getElementById('mh-title').textContent = `${q} 레퍼런스`;
+  document.getElementById('mh-count').textContent = `${d.services?.length||0}개 서비스`;
+  const mc = document.getElementById('mc');
+  const ra = document.createElement('div'); ra.id='ra';
+  if (fromHistory) {
+    const back = document.createElement('div');
+    back.className='hist-back';
+    back.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2L4 7l5 5"/></svg> 히스토리로 돌아가기`;
+    back.onclick = () => { switchTab('hist'); };
+    ra.appendChild(back);
+  }
+  if (d.summary) {
+    const sum = document.createElement('div'); sum.className='sum-card';
+    sum.innerHTML = `<div class="sum-head"><span class="sum-label">종합 인사이트</span>${d.recommended?`<span class="reco-tag">추천: ${d.recommended}</span>`:''}</div><div class="sum-body">${d.summary}</div>`;
+    ra.appendChild(sum);
+  }
+  const list = document.createElement('div'); list.className='svc-list';
+  (d.services||[]).forEach((s,i) => {
+    const tc = s.type==='web'?'bw':s.type==='app'?'ba':'bb';
+    const tl = s.type==='web'?'Web':s.type==='app'?'App':'Web+App';
+    const el = document.createElement('div'); el.className='svc-card';
+    el.style.animationDelay = `${i*0.05}s`;
+    el.innerHTML = `
+      <div class="svc-top">
+        <div class="svc-ico">${s.icon||s.name.slice(0,2).toUpperCase()}</div>
+        <div class="svc-info">
+          <div class="svc-nr"><span class="svc-name">${s.name}</span><span class="badge ${tc}">${tl}</span></div>
+          <div class="svc-desc">${s.desc||''}</div>
+        </div>
+      </div>
+      ${s.path?`<div class="svc-path"><span class="path-lbl">경로</span>${s.path}</div>`:''}
+      ${(s.links||[]).length?`<div class="svc-links">${s.links.map(l=>`<a class="svc-a" href="${l.url}" target="_blank">${l.label} ↗</a>`).join('')}</div>`:''}
+      <div class="pc-row">
+        <div class="pc-col pros"><div class="pc-lbl">장점</div><ul class="pc-ul">${(s.pros||[]).map(p=>`<li>${p}</li>`).join('')}</ul></div>
+        <div class="pc-col cons"><div class="pc-lbl">단점</div><ul class="pc-ul">${(s.cons||[]).map(c=>`<li>${c}</li>`).join('')}</ul></div>
+      </div>
+      ${s.insight?`<div class="ins-row"><span class="ins-tag">인사이트</span><span class="ins-text">${s.insight}</span></div>`:''}`;
+    list.appendChild(el);
+  });
+  ra.appendChild(list);
+  mc.appendChild(ra);
+}
+
+// ─── UI ───────────────────────────────────────────────────
+async function runUI(q) {
+  const sk = chips('sk'); const us = chips('us');
+  setLoad(true); showSkel();
+  document.getElementById('mh-title').textContent = '수집 중...';
+  try {
+    const prompt = `당신은 UI 디자인 리서처입니다. 순수 JSON만 반환 (마크다운 코드블록 없이):
 {"items":[{"title":"작품 제목","source":"Dribbble|Behance 등","sourceColor":"blue|green|pink|orange","url":"https://...","imageUrl":"https://실제이미지URL","author":"작가명","desc":"디자인 특징 1-2문장"}]}
-10개 항목. imageUrl은 실제 접근 가능한 이미지 URL.`;
-      const parsed = await callAPI(sys, `UI 검색: ${q}\n스타일: ${sk.join(', ')||'제한없음'}\n출처: ${us.join(', ')}`);
-      renderUI(parsed, q);
-    } catch(e) { showErr(e.message); }
-    finally { setLoad(false); }
-  }
+10개 항목. imageUrl은 실제 접근 가능한 이미지 URL.
 
-  const SC = { blue:{bg:'#1a2a3a',cl:'#60a5fa'}, green:{bg:'#1a3a25',cl:'#4ade80'}, pink:{bg:'#3a1a2a',cl:'#f472b6'}, orange:{bg:'#3a2a1a',cl:'#fb923c'} };
+UI 검색: ${q}
+스타일: ${sk.join(', ')||'제한없음'}
+출처: ${us.join(', ')}`;
 
-  function renderUI(d, q) {
-    clearResults();
-    document.getElementById('mh-title').textContent = `${q} UI 레퍼런스`;
-    document.getElementById('mh-count').textContent = `${d.items?.length||0}개`;
-    const mc = document.getElementById('mc');
-    const ra = document.createElement('div'); ra.id='ra';
-    const grid = document.createElement('div'); grid.className='ui-grid';
-    (d.items||[]).forEach((it,i) => {
-      const c = SC[it.sourceColor]||SC.blue;
-      const el = document.createElement('div'); el.className='ui-card';
-      el.style.animationDelay = `${i*0.04}s`;
-      const thumb = it.imageUrl
-        ? `<img src="${it.imageUrl}" alt="${it.title}" onerror="this.outerHTML='<span style=\\'color:#6b6b6b;font-size:11px;\\'>${it.source}</span>'">`
-        : `<span style="color:#6b6b6b;font-size:11px;">${it.source}</span>`;
-      el.innerHTML = `
-        <div class="ui-thumb">${thumb}</div>
-        <div class="ui-meta">
-          <div class="ui-title">${it.title}</div>
-          <div class="ui-row">
-            <span class="ui-src-badge" style="background:${c.bg};color:${c.cl}">${it.source}</span>
-            ${it.author?`<span class="ui-author">${it.author}</span>`:''}
-            ${it.url?`<a class="ui-link" href="${it.url}" target="_blank">↗</a>`:''}
-          </div>
-          ${it.desc?`<div class="ui-desc">${it.desc}</div>`:''}
-        </div>`;
-      grid.appendChild(el);
-    });
-    ra.appendChild(grid);
-    mc.appendChild(ra);
-  }
+    const parsed = await callAPI(prompt);
+    renderUI(parsed, q);
+    addToHistory({ type:'ui', query:q, data:parsed, time: new Date().toISOString() });
+    showToast('UI 레퍼런스가 히스토리에 저장됐어요');
+  } catch(e) { showErr(e.message); }
+  finally { setLoad(false); }
+}
 
-  function showErr(msg) {
-    clearResults();
-    const mc = document.getElementById('mc');
-    const ra = document.createElement('div'); ra.id='ra';
-    ra.innerHTML = `<div class="err"><div class="e-icon" style="border-color:#3a1a1a"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#f87171" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h.01"/></svg></div><h3 style="color:#f87171;font-size:13px;margin-bottom:5px">오류가 발생했어요</h3><p style="font-size:12px;color:#6b6b6b">${msg}</p></div>`;
-    mc.appendChild(ra);
-    document.getElementById('mh-title').textContent = '오류';
+const SC = { blue:{bg:'#1a2a3a',cl:'#60a5fa'}, green:{bg:'#1a3a25',cl:'#4ade80'}, pink:{bg:'#3a1a2a',cl:'#f472b6'}, orange:{bg:'#3a2a1a',cl:'#fb923c'} };
+
+function renderUI(d, q, fromHistory=false) {
+  clearResults();
+  document.getElementById('e-func').style.display='none';
+  document.getElementById('e-ui').style.display='none';
+  document.getElementById('e-hist').style.display='none';
+  document.getElementById('mh-title').textContent = `${q} UI 레퍼런스`;
+  document.getElementById('mh-count').textContent = `${d.items?.length||0}개`;
+  const mc = document.getElementById('mc');
+  const ra = document.createElement('div'); ra.id='ra';
+  if (fromHistory) {
+    const back = document.createElement('div');
+    back.className='hist-back';
+    back.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2L4 7l5 5"/></svg> 히스토리로 돌아가기`;
+    back.onclick = () => { switchTab('hist'); };
+    ra.appendChild(back);
   }
+  const grid = document.createElement('div'); grid.className='ui-grid';
+  (d.items||[]).forEach((it,i) => {
+    const c = SC[it.sourceColor]||SC.blue;
+    const el = document.createElement('div'); el.className='ui-card';
+    el.style.animationDelay = `${i*0.04}s`;
+    const thumb = it.imageUrl
+      ? `<img src="${it.imageUrl}" alt="${it.title}" onerror="this.outerHTML='<span style=\\'color:#6b6b6b;font-size:11px;\\'>${it.source}</span>'">`
+      : `<span style="color:#6b6b6b;font-size:11px;">${it.source}</span>`;
+    el.innerHTML = `
+      <div class="ui-thumb">${thumb}</div>
+      <div class="ui-meta">
+        <div class="ui-title">${it.title}</div>
+        <div class="ui-row">
+          <span class="ui-src-badge" style="background:${c.bg};color:${c.cl}">${it.source}</span>
+          ${it.author?`<span class="ui-author">${it.author}</span>`:''}
+          ${it.url?`<a class="ui-link" href="${it.url}" target="_blank">↗</a>`:''}
+        </div>
+        ${it.desc?`<div class="ui-desc">${it.desc}</div>`:''}
+      </div>`;
+    grid.appendChild(el);
+  });
+  ra.appendChild(grid);
+  mc.appendChild(ra);
+}
+
+// ─── History ──────────────────────────────────────────────
+function formatTime(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 1000);
+  if (diff < 60) return '방금';
+  if (diff < 3600) return `${Math.floor(diff/60)}분 전`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}시간 전`;
+  return d.toLocaleDateString('ko-KR', { month:'short', day:'numeric' });
+}
+
+function renderHistSidebar() {
+  const el = document.getElementById('hist-sb-list');
+  if (!el) return;
+  const items = loadHistory();
+  if (!items.length) { el.innerHTML = '<div style="font-size:11px;color:var(--text-m);">저장된 리서치가 없어요</div>'; return; }
+  el.innerHTML = items.slice(0,8).map(it => `
+    <div onclick="viewHistItem(${it.id})" style="padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:7px;">
+      <span class="badge hist-type ${it.type==='func'?'ht-func':'ht-ui'}" style="font-size:9px;padding:1px 5px;">${it.type==='func'?'기능':'UI'}</span>
+      <span style="font-size:12px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-s);">${it.query}</span>
+      <span style="font-size:10px;color:var(--text-m);font-family:var(--mono);">${formatTime(it.time)}</span>
+    </div>`).join('');
+}
+
+function renderHistPage() {
+  clearResults();
+  document.getElementById('e-func').style.display='none';
+  document.getElementById('e-ui').style.display='none';
+  const items = loadHistory();
+  document.getElementById('mh-title').textContent = '리서치 히스토리';
+  document.getElementById('mh-count').textContent = `${items.length}개`;
+
+  if (!items.length) {
+    document.getElementById('e-hist').style.display='flex';
+    return;
+  }
+  document.getElementById('e-hist').style.display='none';
+  const mc = document.getElementById('mc');
+  const ra = document.createElement('div'); ra.id='ra';
+  const list = document.createElement('div'); list.className='hist-list';
+  items.forEach((it, i) => {
+    const el = document.createElement('div'); el.className='hist-item';
+    el.style.animationDelay = `${i*0.04}s`;
+    const preview = it.type==='func'
+      ? `${it.data.services?.length||0}개 서비스 분석 · 추천: ${it.data.recommended||'—'}`
+      : `${it.data.items?.length||0}개 UI 레퍼런스`;
+    el.innerHTML = `
+      <div class="hist-head">
+        <span class="badge hist-type ${it.type==='func'?'ht-func':'ht-ui'}">${it.type==='func'?'기능':'UI'}</span>
+        <span class="hist-q">${it.query}</span>
+        <div class="hist-meta">
+          <span class="hist-time">${formatTime(it.time)}</span>
+          <button class="hist-del" onclick="event.stopPropagation();deleteHistory(${it.id})" title="삭제">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M2 2l8 8M10 2l-8 8"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="hist-preview">${preview}</div>`;
+    el.addEventListener('click', () => viewHistItem(it.id));
+    list.appendChild(el);
+  });
+  ra.appendChild(list);
+  mc.appendChild(ra);
+}
+
+function viewHistItem(id) {
+  const item = loadHistory().find(i => i.id === id);
+  if (!item) return;
+  if (item.type === 'func') {
+    switchTab('func');
+    renderFunc(item.data, item.query, true);
+  } else {
+    switchTab('ui');
+    renderUI(item.data, item.query, true);
+  }
+}
+
+// ─── Error ────────────────────────────────────────────────
+function showErr(msg) {
+  clearResults();
+  const mc = document.getElementById('mc');
+  const ra = document.createElement('div'); ra.id='ra';
+  ra.innerHTML = `<div class="err"><div class="e-icon" style="border-color:#3a1a1a"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#f87171" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h.01"/></svg></div><h3 style="color:#f87171;font-size:13px;margin-bottom:5px">오류가 발생했어요</h3><p style="font-size:12px;color:#6b6b6b;max-width:300px;">${msg}</p></div>`;
+  mc.appendChild(ra);
+  document.getElementById('mh-title').textContent = '오류';
+}
+
+// ─── Init ─────────────────────────────────────────────────
+renderHistSidebar();
 </script>
 </body>
 </html>
