@@ -201,10 +201,10 @@
     <div class="api-banner">
       <div class="api-banner-row">
         <span class="api-dot" id="api-dot"></span>
-        <span class="api-lbl" id="api-lbl">Gemini API 키 필요</span>
+        <span class="api-lbl" id="api-lbl">Groq API 키 필요</span>
       </div>
       <div class="api-input-wrap">
-        <input type="password" id="api-key-input" placeholder="AIza..." oninput="onKeyInput()" autocomplete="off">
+        <input type="password" id="api-key-input" placeholder="gsk_..." oninput="onKeyInput()" autocomplete="off">
         <button class="api-eye" onclick="toggleKeyVisibility()" title="보기/숨기기">
           <svg id="eye-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4">
             <path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/>
@@ -212,7 +212,7 @@
           </svg>
         </button>
       </div>
-      <div class="api-hint">브라우저 메모리 저장 &nbsp;·&nbsp; <a href="https://aistudio.google.com/app/apikey" target="_blank">무료 키 발급 ↗</a></div>
+      <div class="api-hint">브라우저 메모리 저장 &nbsp;·&nbsp; <a href="https://console.groq.com/keys" target="_blank">무료 키 발급 ↗</a></div>
     </div>
     <div class="api-divr"></div>
 
@@ -308,7 +308,7 @@
           </svg>
         </div>
         <h3>기능 레퍼런스 리서치</h3>
-        <p>Gemini API 키를 입력하고, 찾고 싶은 기능과 타겟 사용자를 입력해 리서치를 시작하세요.</p>
+        <p>Groq API 키를 입력하고, 찾고 싶은 기능과 타겟 사용자를 입력해 리서치를 시작하세요.</p>
       </div>
       <div class="empty" id="e-ui" style="display:none;">
         <div class="e-icon">
@@ -380,12 +380,12 @@ function onKeyInput() {
   apiKey = document.getElementById('api-key-input').value.trim();
   const dot = document.getElementById('api-dot');
   const lbl = document.getElementById('api-lbl');
-  if (apiKey.startsWith('AIza') && apiKey.length > 20) {
+  if (apiKey.startsWith('gsk_') && apiKey.length > 20) {
     dot.classList.add('ok');
     lbl.textContent = 'API 키 설정됨';
   } else {
     dot.classList.remove('ok');
-    lbl.textContent = apiKey ? '유효하지 않은 키 형식' : 'Gemini API 키 필요';
+    lbl.textContent = apiKey ? '유효하지 않은 키 형식' : 'Groq API 키 필요';
   }
 }
 function toggleKeyVisibility() {
@@ -450,15 +450,19 @@ function showSkel() {
   mc.appendChild(d);
 }
 
-// ─── API Call (Gemini) ────────────────────────────────────
+// ─── API Call (Groq) ─────────────────────────────────────
 async function callAPI(prompt) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-  const res = await fetch(url, {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.7, maxOutputTokens: 3000 }
+      model: 'llama-3.3-70b-versatile',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+      max_tokens: 3000
     })
   });
   if (!res.ok) {
@@ -466,14 +470,14 @@ async function callAPI(prompt) {
     throw new Error(err?.error?.message || `API 오류 (${res.status})`);
   }
   const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const text = data.choices?.[0]?.message?.content || '';
   const cleaned = text.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
   return JSON.parse(cleaned);
 }
 
 // ─── Run ──────────────────────────────────────────────────
 async function run() {
-  if (!apiKey || !apiKey.startsWith('AIza')) {
+  if (!apiKey || !apiKey.startsWith('gsk_')) {
     const inp = document.getElementById('api-key-input');
     inp.focus();
     inp.style.borderColor = 'var(--red)';
