@@ -617,10 +617,12 @@ function renderFunc(d, q, fromHistory=false) {
             <div class="screen-card">
               <div class="screen-shot" onclick="openLightbox(${JSON.stringify(s.screens||[]).replace(/"/g,'&quot;')}, ${si})">
                 <div class="screen-shot-loading"><div class="dot-spin"></div></div>
-                <img src="https://image.thum.io/get/width/440/crop/276/noanimate/${encodeURIComponent(sc.url)}"
+                <img src="https://s.wordpress.com/mshots/v1/${encodeURIComponent(sc.url)}?w=880"
+                     data-url="${sc.url}"
+                     data-retries="0"
                      alt="${sc.step}"
-                     onload="this.previousElementSibling.style.display='none'"
-                     onerror="this.previousElementSibling.style.display='none';this.outerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;&quot;><svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 18 18&quot; fill=&quot;none&quot; stroke=&quot;#3a3a3a&quot; stroke-width=&quot;1.2&quot;><rect x=&quot;2&quot; y=&quot;2&quot; width=&quot;14&quot; height=&quot;14&quot; rx=&quot;2&quot;/><path d=&quot;M2 12l4-4 3 3 2-2 5 5&quot;/></svg><span style=&quot;font-size:10px;color:#6b6b6b;&quot;>미리보기 불가</span></div>'">
+                     onload="shotOnLoad(this)"
+                     onerror="shotOnError(this)">
               </div>
               <div class="screen-step-label">
                 <div class="screen-step-num">STEP ${si+1}</div>
@@ -791,6 +793,30 @@ function showErr(msg) {
   document.getElementById('mh-title').textContent = '오류';
 }
 
+// ─── Screenshot helpers ───────────────────────────────────
+function shotOnLoad(img) {
+  // mshots가 아직 생성 중이면 naturalWidth가 1px 이하인 플레이스홀더를 반환
+  if (img.naturalWidth <= 8) {
+    const retries = parseInt(img.dataset.retries || '0');
+    if (retries < 6) {
+      img.dataset.retries = retries + 1;
+      setTimeout(() => {
+        img.src = `https://s.wordpress.com/mshots/v1/${encodeURIComponent(img.dataset.url)}?w=880&r=${retries + 1}`;
+      }, 3000);
+    } else {
+      shotOnError(img);
+    }
+  } else {
+    const spinner = img.previousElementSibling;
+    if (spinner) spinner.style.display = 'none';
+  }
+}
+function shotOnError(img) {
+  const spinner = img.previousElementSibling;
+  if (spinner) spinner.style.display = 'none';
+  img.outerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#3a3a3a" stroke-width="1.2"><rect x="2" y="2" width="14" height="14" rx="2"/><path d="M2 12l4-4 3 3 2-2 5 5"/></svg><span style="font-size:10px;color:#6b6b6b;">미리보기 불가</span></div>';
+}
+
 // ─── Screen Flow ──────────────────────────────────────────
 function toggleScreens(btn) {
   btn.classList.toggle('open');
@@ -812,7 +838,7 @@ function openLightbox(screens, idx) {
 function updateLightbox() {
   const sc = lbScreens[lbIdx];
   document.getElementById('lb-img').src =
-    `https://image.thum.io/get/width/1200/crop/750/noanimate/${encodeURIComponent(sc.url)}`;
+    `https://s.wordpress.com/mshots/v1/${encodeURIComponent(sc.url)}?w=1400`;
   document.getElementById('lb-caption').textContent = `STEP ${lbIdx+1}  ·  ${sc.step}`;
   document.getElementById('lb-prev').disabled = lbIdx === 0;
   document.getElementById('lb-next').disabled = lbIdx === lbScreens.length - 1;
