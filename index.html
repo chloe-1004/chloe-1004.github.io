@@ -547,8 +547,13 @@ async function runFunc(q) {
   document.getElementById('mh-title').textContent = '분석 중...';
   try {
     const prompt = `당신은 UX 리서처입니다. 아래 형식의 순수 JSON만 반환하세요 (마크다운 코드블록 없이, JSON만):
-{"summary":"전체 인사이트 2-3문장","recommended":"추천 서비스명","services":[{"name":"서비스명","type":"web|app|both","icon":"영문2글자","desc":"기능 제공 방식 한 문장","path":"접근 경로","links":[{"label":"링크명","url":"https://..."}],"pros":["장점1","장점2","장점3"],"cons":["단점1","단점2"],"insight":"타겟 사용자 기준 UX 평가","screens":[{"step":"단계 설명 (예: 메인 홈)","url":"https://실제접근가능한URL"}]}]}
-서비스 5-7개, 실제 존재하는 서비스와 URL만 사용. screens는 해당 기능에 접근하는 실제 사용자 동선 순서대로 3-5개 URL (실제 접속 가능한 web URL만, 앱 딥링크 제외).
+{"summary":"전체 인사이트 2-3문장","recommended":"추천 서비스명","services":[{"name":"서비스명","type":"web|app|both","icon":"영문2글자","desc":"기능 제공 방식 한 문장","path":"접근 경로","links":[{"label":"링크명","url":"https://..."}],"pros":["장점1","장점2","장점3"],"cons":["단점1","단점2"],"insight":"타겟 사용자 기준 UX 평가","screens":[{"step":"단계 설명","pageUrl":"https://해당단계페이지URL","imageUrl":"https://실제이미지URL.jpg또는.png"}]}]}
+서비스 5-7개. screens는 해당 기능에 도달하는 사용자 동선 3-5단계.
+imageUrl 규칙 (매우 중요): 반드시 .jpg/.png/.webp로 끝나는 직접 이미지 URL이어야 함. 다음 소스에서 찾을 것:
+1) 공식 헬프센터 문서에 삽입된 스크린샷 이미지 (예: storage.googleapis.com, help.instagram.com의 img 태그 src)
+2) 앱스토어/플레이스토어 스크린샷 (예: is1-ssl.mzstatic.com, play-lh.googleusercontent.com)
+3) 공식 블로그/뉴스룸의 제품 스크린샷 이미지
+4) 위 소스를 찾기 어려우면 null로 설정. 절대 추측하거나 존재하지 않는 URL 사용 금지.
 
 기능: ${q}
 타겟: ${target||'일반 사용자'}
@@ -612,24 +617,41 @@ function renderFunc(d, q, fromHistory=false) {
         화면 동선 보기 <span style="font-size:10px;font-family:var(--mono);color:var(--text-m);margin-left:2px;">${s.screens.length}단계</span>
       </button>
       <div class="screen-panel">
-        <div class="screen-flow">${(s.screens||[]).map((sc, si) => `
+        <div class="screen-flow">${(s.screens||[]).map((sc, si) => {
+          const hasImg = sc.imageUrl && sc.imageUrl !== 'null' && sc.imageUrl !== '';
+          const screensJson = JSON.stringify(s.screens||[]).replace(/"/g,'&quot;');
+          return `
           <div class="screen-step">
             <div class="screen-card">
-              <div class="screen-shot" onclick="openLightbox(${JSON.stringify(s.screens||[]).replace(/"/g,'&quot;')}, ${si})">
+              <div class="screen-shot" onclick="${hasImg ? `openLightbox(${screensJson}, ${si})` : `window.open('${sc.pageUrl||''}','_blank')`}" title="${hasImg ? '크게 보기' : '페이지 열기'}">
+                ${hasImg ? `
                 <div class="screen-shot-loading"><div class="dot-spin"></div></div>
-                <img src="https://api.microlink.io/?url=${encodeURIComponent(sc.url)}&screenshot=true&embed=screenshot.url&viewport.width=1280&viewport.height=800"
-                     data-url="${sc.url}"
+                <img src="${sc.imageUrl}"
+                     data-url="${sc.pageUrl||''}"
                      alt="${sc.step}"
                      onload="shotOnLoad(this)"
                      onerror="shotOnError(this)">
+                ` : `
+                <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px;">
+                  <div style="width:32px;height:32px;border-radius:6px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;font-family:var(--mono);">${s.icon||s.name.slice(0,2).toUpperCase()}</div>
+                  <span style="font-size:10px;color:var(--text-m);text-align:center;line-height:1.4;">${sc.step}</span>
+                  ${sc.pageUrl ? `<span style="font-size:10px;color:var(--blue);">열기 ↗</span>` : ''}
+                </div>`}
               </div>
               <div class="screen-step-label">
                 <div class="screen-step-num">STEP ${si+1}</div>
                 ${sc.step}
+                ${sc.pageUrl ? `<a href="${sc.pageUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--blue);text-decoration:none;margin-top:3px;">직접 열기 ↗</a>` : ''}
               </div>
             </div>
             ${si < (s.screens||[]).length-1 ? `<div class="screen-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>` : ''}
-          </div>`).join('')}
+          </div>`;
+        }).join('')}
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;">
+          <a href="https://mobbin.com/apps?q=${encodeURIComponent(s.name)}" target="_blank" style="font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:5px;color:var(--text-s);text-decoration:none;font-family:var(--mono);">Mobbin에서 보기 ↗</a>
+          <a href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(s.name+' UI screenshot')}" target="_blank" style="font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:5px;color:var(--text-s);text-decoration:none;font-family:var(--mono);">Pinterest ↗</a>
+          <a href="https://dribbble.com/search/${encodeURIComponent(s.name)}" target="_blank" style="font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:5px;color:var(--text-s);text-decoration:none;font-family:var(--mono);">Dribbble ↗</a>
         </div>
       </div>` : ''}`;
     list.appendChild(el);
@@ -823,8 +845,7 @@ function openLightbox(screens, idx) {
 
 function updateLightbox() {
   const sc = lbScreens[lbIdx];
-  document.getElementById('lb-img').src =
-    `https://api.microlink.io/?url=${encodeURIComponent(sc.url)}&screenshot=true&embed=screenshot.url&viewport.width=1440&viewport.height=900`;
+  document.getElementById('lb-img').src = sc.imageUrl || '';
   document.getElementById('lb-caption').textContent = `STEP ${lbIdx+1}  ·  ${sc.step}`;
   document.getElementById('lb-prev').disabled = lbIdx === 0;
   document.getElementById('lb-next').disabled = lbIdx === lbScreens.length - 1;
