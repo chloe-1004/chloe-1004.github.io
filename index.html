@@ -617,9 +617,8 @@ function renderFunc(d, q, fromHistory=false) {
             <div class="screen-card">
               <div class="screen-shot" onclick="openLightbox(${JSON.stringify(s.screens||[]).replace(/"/g,'&quot;')}, ${si})">
                 <div class="screen-shot-loading"><div class="dot-spin"></div></div>
-                <img src="https://s.wordpress.com/mshots/v1/${encodeURIComponent(sc.url)}?w=880"
+                <img src="https://api.microlink.io/?url=${encodeURIComponent(sc.url)}&screenshot=true&embed=screenshot.url&viewport.width=1280&viewport.height=800"
                      data-url="${sc.url}"
-                     data-retries="0"
                      alt="${sc.step}"
                      onload="shotOnLoad(this)"
                      onerror="shotOnError(this)">
@@ -795,21 +794,8 @@ function showErr(msg) {
 
 // ─── Screenshot helpers ───────────────────────────────────
 function shotOnLoad(img) {
-  // mshots가 아직 생성 중이면 naturalWidth가 1px 이하인 플레이스홀더를 반환
-  if (img.naturalWidth <= 8) {
-    const retries = parseInt(img.dataset.retries || '0');
-    if (retries < 6) {
-      img.dataset.retries = retries + 1;
-      setTimeout(() => {
-        img.src = `https://s.wordpress.com/mshots/v1/${encodeURIComponent(img.dataset.url)}?w=880&r=${retries + 1}`;
-      }, 3000);
-    } else {
-      shotOnError(img);
-    }
-  } else {
-    const spinner = img.previousElementSibling;
-    if (spinner) spinner.style.display = 'none';
-  }
+  const spinner = img.previousElementSibling;
+  if (spinner) spinner.style.display = 'none';
 }
 function shotOnError(img) {
   const spinner = img.previousElementSibling;
@@ -838,7 +824,7 @@ function openLightbox(screens, idx) {
 function updateLightbox() {
   const sc = lbScreens[lbIdx];
   document.getElementById('lb-img').src =
-    `https://s.wordpress.com/mshots/v1/${encodeURIComponent(sc.url)}?w=1400`;
+    `https://api.microlink.io/?url=${encodeURIComponent(sc.url)}&screenshot=true&embed=screenshot.url&viewport.width=1440&viewport.height=900`;
   document.getElementById('lb-caption').textContent = `STEP ${lbIdx+1}  ·  ${sc.step}`;
   document.getElementById('lb-prev').disabled = lbIdx === 0;
   document.getElementById('lb-next').disabled = lbIdx === lbScreens.length - 1;
