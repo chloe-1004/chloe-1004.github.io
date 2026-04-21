@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎂 준 생일 축하해요!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #0d0d1a;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Confetti */
+  .confetti-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 14px;
+    top: -20px;
+    animation: confettiFall linear infinite;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Main content */
+  .main {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .title {
+    font-size: clamp(52px, 10vw, 110px);
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #ff6fd8, #ffd700, #ff6b6b, #a29bfe);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 3s ease infinite;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 30px rgba(255,107,107,0.5));
+  }
+
+  .subtitle {
+    font-size: clamp(22px, 4vw, 38px);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    opacity: 0.95;
+  }
+
+  .emoji-row {
+    font-size: 48px;
+    margin: 16px 0 32px;
+    animation: bounce 1s ease infinite alternate;
+  }
+
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-12px); }
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Meme grid */
+  .meme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .meme-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+  }
+
+  .meme-card:hover {
+    transform: scale(1.04) rotate(-1deg);
+    box-shadow: 0 10px 40px rgba(255,107,107,0.35);
+  }
+
+  .meme-img-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #1a1a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .meme-img-wrap canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .meme-caption {
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    background: rgba(0,0,0,0.4);
+  }
+
+  /* Balloon animation */
+  .balloons {
+    position: fixed;
+    bottom: -120px;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: space-around;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .balloon {
+    font-size: 60px;
+    animation: floatUp linear infinite;
+    opacity: 0.85;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(-5deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.7; }
+    100% { transform: translateY(-110vh) rotate(5deg); opacity: 0; }
+  }
+
+  .party-btn {
+    margin-top: 32px;
+    padding: 14px 40px;
+    font-size: 20px;
+    font-weight: 900;
+    font-family: 'Noto Sans KR', sans-serif;
+    background: linear-gradient(135deg, #ff6b6b, #ffd700);
+    border: none;
+    border-radius: 100px;
+    color: #1a0a0a;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 24px rgba(255,107,107,0.5);
+  }
+
+  .party-btn:hover {
+    transform: scale(1.07);
+    box-shadow: 0 8px 32px rgba(255,215,0,0.6);
+  }
+
+  .party-btn:active {
+    transform: scale(0.96);
+  }
+
+  /* Sparkle */
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99;
+    animation: sparkleOut 0.8s ease-out forwards;
+    font-size: 24px;
+  }
+
+  @keyframes sparkleOut {
+    0% { opacity: 1; transform: scale(0) translate(0,0); }
+    50% { opacity: 1; transform: scale(1.4) translate(var(--dx), var(--dy)); }
+    100% { opacity: 0; transform: scale(0.5) translate(calc(var(--dx)*2), calc(var(--dy)*2)); }
+  }
+</style>
+</head>
+<body>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<div class="balloons" id="balloons"></div>
+
+<div class="main">
+  <div class="title">🎂 준 생일 축하해요!</div>
+  <div class="subtitle">오늘 하루 주인공은 바로 YOU 🎉</div>
+  <div class="emoji-row">🎈🥳🎁🍰🎊</div>
+
+  <div class="meme-grid" id="memeGrid"></div>
+
+  <button class="party-btn" onclick="partyBlast()">🎆 파티 더 터뜨리기!</button>
+</div>
+
+<script>
+// ─── Memes: drawn on canvas ───────────────────────────────────────────────────
+const memes = [
+  {
+    caption: "생일인데 일 하면 안 되지~",
+    draw(ctx, w, h) {
+      // Dark office background
+      ctx.fillStyle = '#1e1e2e';
+      ctx.fillRect(0,0,w,h);
+      // Monitor
+      ctx.fillStyle = '#333';
+      ctx.roundRect(w*0.15, h*0.1, w*0.7, h*0.55, 10);
+      ctx.fill();
+      ctx.fillStyle = '#0d0';
+      ctx.font = `bold ${w*0.08}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText('404: 일 없음', w/2, h*0.42);
+      ctx.font = `${w*0.05}px monospace`;
+      ctx.fillStyle = '#888';
+      ctx.fillText('ERROR: birthday.exe', w/2, h*0.28);
+      // Stand
+      ctx.fillStyle = '#555';
+      ctx.fillRect(w*0.45, h*0.65, w*0.1, h*0.1);
+      ctx.fillRect(w*0.35, h*0.75, w*0.3, h*0.05);
+      // Party hat on monitor
+      ctx.fillStyle = '#ff6b6b';
+      ctx.beginPath();
+      ctx.moveTo(w*0.5, h*0.0);
+      ctx.lineTo(w*0.38, h*0.12);
+      ctx.lineTo(w*0.62, h*0.12);
+      ctx.fill();
+      ctx.fillStyle = '#ffd700';
+      ctx.font = `${w*0.2}px serif`;
+      ctx.fillText('🎂', w*0.5, h*0.95);
+    }
+  },
+  {
+    caption: "나이는 숫자에 불과해 (라고 자기 합리화 중)",
+    draw(ctx, w, h) {
+      ctx.fillStyle = '#2d1b69';
+      ctx.fillRect(0,0,w,h);
+      // Big number
+      ctx.font = `bold ${w*0.55}px 'Noto Sans KR', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(255,255,255,0.07)';
+      ctx.fillText('??', w/2, h*0.65);
+      // Main emoji
+      ctx.font = `${w*0.35}px serif`;
+      ctx.fillStyle = '#fff';
+      ctx.fillText('👴', w/2, h*0.55);
+      // Stars
+      const stars = ['✨','⭐','💫','🌟'];
+      stars.forEach((s, i) => {
+        ctx.font = `${w*0.1}px serif`;
+        const x = [0.15,0.8,0.2,0.75][i]*w;
+        const y = [0.2,0.25,0.75,0.8][i]*h;
+        ctx.fillText(s, x, y);
+      });
+      ctx.font = `bold ${w*0.1}px 'Noto Sans KR', sans-serif`;
+      ctx.fillStyle = '#a29bfe';
+      ctx.fillText('그냥 숫자임 ㅋ', w/2, h*0.9);
+    }
+  },
+  {
+    caption: "케이크 촛불 한 번에 끄면 소원 이뤄짐 (찐)",
+    draw(ctx, w, h) {
+      ctx.fillStyle = '#1a0a2e';
+      ctx.fillRect(0,0,w,h);
+      // Cake base
+      const cx = w/2, cy = h*0.72, cr = w*0.35;
+      ctx.fillStyle = '#c0392b';
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, cr, cr*0.25, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = '#e74c3c';
+      ctx.fillRect(cx-cr, cy-cr*0.55, cr*2, cr*0.55);
+      ctx.fillStyle = '#c0392b';
+      ctx.beginPath();
+      ctx.ellipse(cx, cy-cr*0.55, cr, cr*0.25, 0, 0, Math.PI*2);
+      ctx.fill();
+      // Frosting
+      for(let i=0; i<6; i++) {
+        const x = cx - cr + (cr*2/5)*i;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(x, cy-cr*0.55, cr*0.12, 0, Math.PI*2);
+        ctx.fill();
+      }
+      // Candles
+      const candleColors = ['#ff6b6b','#ffd700','#a29bfe','#55efc4'];
+      for(let i=0; i<4; i++) {
+        const cx2 = cx - cr*0.5 + i*(cr/1.5);
+        ctx.fillStyle = candleColors[i];
+        ctx.fillRect(cx2-6, cy-cr*1.0, 12, cr*0.4);
+        // Flame
+        ctx.fillStyle = '#ffd700';
+        ctx.beginPath();
+        ctx.ellipse(cx2, cy-cr*1.05, 6, 14, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#ff6b6b';
+        ctx.beginPath();
+        ctx.ellipse(cx2, cy-cr*1.08, 3, 8, 0, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.font = `bold ${w*0.08}px 'Noto Sans KR', sans-serif`;
+      ctx.fillStyle = '#ffd700';
+      ctx.textAlign = 'center';
+      ctx.fillText('💨 후~!', w/2, h*0.18);
+    }
+  },
+  {
+    caption: "생일 선물은 받을수록 좋은 거잖아요?",
+    draw(ctx, w, h) {
+      ctx.fillStyle = '#0f2027';
+      ctx.fillRect(0,0,w,h);
+      // Gift boxes stacked
+      const gifts = [
+        { x:0.5, y:0.78, size:0.3, color:'#ff6b6b', ribbon:'#ffd700' },
+        { x:0.35, y:0.6, size:0.22, color:'#a29bfe', ribbon:'#ff6b6b' },
+        { x:0.65, y:0.58, size:0.2, color:'#ffd700', ribbon:'#a29bfe' },
+        { x:0.5, y:0.44, size:0.15, color:'#55efc4', ribbon:'#ff6b6b' },
+      ];
+      gifts.forEach(g => {
+        const s = g.size * w;
+        const gx = g.x*w - s/2, gy = g.y*h - s/2;
+        ctx.fillStyle = g.color;
+        ctx.roundRect(gx, gy, s, s, 8);
+        ctx.fill();
+        ctx.fillStyle = g.ribbon;
+        ctx.fillRect(gx + s*0.45, gy, s*0.1, s);
+        ctx.fillRect(gx, gy + s*0.35, s, s*0.1);
+        // Bow
+        ctx.font = `${s*0.35}px serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('🎀', g.x*w, gy + s*0.1);
+      });
+      ctx.font = `bold ${w*0.1}px 'Noto Sans KR', sans-serif`;
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.fillText('전부 내 거~', w/2, h*0.12);
+      ctx.font = `${w*0.2}px serif`;
+      ctx.fillText('😏', w/2, h*0.25);
+    }
+  },
+  {
+    caption: "준이 태어난 날, 세상이 한층 더 화려해짐",
+    draw(ctx, w, h) {
+      // Starry sky
+      ctx.fillStyle = '#020818';
+      ctx.fillRect(0,0,w,h);
+      for(let i=0; i<60; i++) {
+        ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.8+0.2})`;
+        ctx.beginPath();
+        ctx.arc(Math.random()*w, Math.random()*h*0.7, Math.random()*2+0.5, 0, Math.PI*2);
+        ctx.fill();
+      }
+      // Earth glow
+      const grad = ctx.createRadialGradient(w/2,h*0.6,0, w/2,h*0.6,w*0.4);
+      grad.addColorStop(0, 'rgba(255,215,0,0.7)');
+      grad.addColorStop(0.5, 'rgba(255,107,107,0.3)');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(w/2, h*0.6, w*0.4, 0, Math.PI*2);
+      ctx.fill();
+      ctx.font = `${w*0.3}px serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('🌍', w/2, h*0.68);
+      // Sparkles around
+      ['✨','💥','⚡','🌟','💫'].forEach((s,i)=>{
+        const angle = (i/5)*Math.PI*2;
+        const r = w*0.35;
+        ctx.font = `${w*0.1}px serif`;
+        ctx.fillText(s, w/2+Math.cos(angle)*r, h*0.6+Math.sin(angle)*r*0.7);
+      });
+      ctx.font = `bold ${w*0.1}px 'Noto Sans KR', sans-serif`;
+      ctx.fillStyle = '#ffd700';
+      ctx.fillText('반짝반짝✨', w/2, h*0.15);
+    }
+  },
+  {
+    caption: "오늘만큼은 다이어트 없음 🍰🍕🍔",
+    draw(ctx, w, h) {
+      ctx.fillStyle = '#1a0a0a';
+      ctx.fillRect(0,0,w,h);
+      // Big X over salad
+      ctx.font = `${w*0.25}px serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('🥗', w*0.5, h*0.35);
+      ctx.strokeStyle = '#ff0000';
+      ctx.lineWidth = 12;
+      ctx.beginPath();
+      ctx.moveTo(w*0.25, h*0.1);
+      ctx.lineTo(w*0.75, h*0.45);
+      ctx.moveTo(w*0.75, h*0.1);
+      ctx.lineTo(w*0.25, h*0.45);
+      ctx.stroke();
+      // Food parade
+      const foods = ['🍕','🍔','🍰','🍩','🌮','🍣'];
+      foods.forEach((f,i)=>{
+        const x = (i%3)*w*0.33 + w*0.13;
+        const y = h*0.6 + Math.floor(i/3)*h*0.22;
+        ctx.font = `${w*0.14}px serif`;
+        ctx.fillText(f, x, y);
+      });
+    }
+  },
+];
+
+function drawMeme(canvas, meme) {
+  const dpr = window.devicePixelRatio || 1;
+  const size = canvas.offsetWidth;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  meme.draw(ctx, size, size);
+}
+
+// Build grid
+const grid = document.getElementById('memeGrid');
+memes.forEach((meme, i) => {
+  const card = document.createElement('div');
+  card.className = 'meme-card';
+  const wrap = document.createElement('div');
+  wrap.className = 'meme-img-wrap';
+  const canvas = document.createElement('canvas');
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  canvas.style.display = 'block';
+  wrap.appendChild(canvas);
+  const cap = document.createElement('div');
+  cap.className = 'meme-caption';
+  cap.textContent = meme.caption;
+  card.appendChild(wrap);
+  card.appendChild(cap);
+  grid.appendChild(card);
+
+  setTimeout(() => {
+    drawMeme(canvas, meme);
+  }, 50 + i*30);
+
+  card.addEventListener('click', (e) => {
+    spawnSparkles(e.clientX, e.clientY);
+  });
+});
+
+// ─── Confetti ─────────────────────────────────────────────────────────────────
+const colors = ['#ff6b6b','#ffd700','#a29bfe','#55efc4','#fd79a8','#fdcb6e','#6c5ce7','#00b894'];
+const container = document.getElementById('confettiContainer');
+
+function makeConfetti(burst = false) {
+  const count = burst ? 40 : 1;
+  for(let i=0; i<count; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const shapes = ['▲','●','■','★','♦'];
+    el.textContent = shapes[Math.floor(Math.random()*shapes.length)];
+    el.style.color = colors[Math.floor(Math.random()*colors.length)];
+    el.style.left = (burst ? (Math.random()*100) : (Math.random()*100)) + '%';
+    el.style.fontSize = (8 + Math.random()*12) + 'px';
+    el.style.animationDuration = (3 + Math.random()*5) + 's';
+    el.style.animationDelay = (burst ? 0 : (Math.random()*6)) + 's';
+    container.appendChild(el);
+    setTimeout(() => el.remove(), burst ? 4000 : 10000);
+  }
+}
+
+// Continuous confetti
+setInterval(() => makeConfetti(false), 200);
+
+// ─── Balloons ─────────────────────────────────────────────────────────────────
+const balloonContainer = document.getElementById('balloons');
+const balloonEmojis = ['🎈','🎈','🎉','🎊','🎈','🎈','🎊'];
+balloonEmojis.forEach((b, i) => {
+  const el = document.createElement('div');
+  el.className = 'balloon';
+  el.textContent = b;
+  el.style.animationDuration = (8 + Math.random()*8) + 's';
+  el.style.animationDelay = (Math.random()*6) + 's';
+  balloonContainer.appendChild(el);
+});
+
+// ─── Party blast button ────────────────────────────────────────────────────────
+function partyBlast() {
+  makeConfetti(true);
+  // Shake the title
+  const title = document.querySelector('.title');
+  title.style.animation = 'none';
+  title.style.transform = 'scale(1.1)';
+  setTimeout(() => {
+    title.style.transform = '';
+    title.style.animation = '';
+  }, 300);
+  // Add more balloons
+  for(let i=0; i<5; i++) {
+    const el = document.createElement('div');
+    el.className = 'balloon';
+    el.textContent = ['🎈','🎉','🥳','💥','🎊'][i];
+    el.style.left = (10 + i*20) + '%';
+    el.style.animationDuration = (6 + Math.random()*4) + 's';
+    el.style.animationDelay = '0s';
+    balloonContainer.appendChild(el);
+    setTimeout(() => el.remove(), 8000);
+  }
+}
+
+// ─── Sparkle on click ─────────────────────────────────────────────────────────
+function spawnSparkles(x, y) {
+  const emojis = ['✨','💥','🎉','⭐','🎈','💫'];
+  for(let i=0; i<8; i++) {
+    const el = document.createElement('div');
+    el.className = 'sparkle';
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    const angle = (i/8)*Math.PI*2;
+    const r = 60 + Math.random()*40;
+    el.style.setProperty('--dx', Math.cos(angle)*r + 'px');
+    el.style.setProperty('--dy', Math.sin(angle)*r + 'px');
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+  }
+}
+
+document.addEventListener('click', (e) => {
+  if(e.target.closest('.meme-card') || e.target.closest('.party-btn')) return;
+  spawnSparkles(e.clientX, e.clientY);
+});
+</script>
+</body>
+</html>
