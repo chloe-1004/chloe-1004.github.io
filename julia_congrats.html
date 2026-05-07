@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Julia 입사 축하!</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Unbounded:wght@700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #fdf0e8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    /* ── 전체 카드 ── */
+    .card {
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+    }
+
+    /* ── 폭발 일러스트 영역 ── */
+    .burst-scene {
+      position: relative;
+      width: 340px;
+      height: 340px;
+      margin: 0 auto 0;
+    }
+
+    /* 핑크 별 폭발 */
+    .burst {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 260px; height: 260px;
+      transform: translate(-50%, -52%);
+      background: #f4a0c0;
+      clip-path: polygon(
+        50% 0%, 61% 20%, 85% 10%, 75% 32%,
+        100% 38%, 80% 52%, 98% 68%, 76% 68%,
+        80% 92%, 60% 78%, 50% 100%, 40% 78%,
+        20% 92%, 24% 68%, 2% 68%, 20% 52%,
+        0% 38%, 25% 32%, 15% 10%, 39% 20%
+      );
+      animation: burst-spin 20s linear infinite;
+    }
+    @keyframes burst-spin {
+      from { transform: translate(-50%,-52%) rotate(0deg); }
+      to   { transform: translate(-50%,-52%) rotate(360deg); }
+    }
+
+    /* 초 몸통 */
+    .candle-body {
+      position: absolute;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      width: 42px; height: 160px;
+      background: linear-gradient(90deg, #7b7fc4 0%, #a5a8e0 40%, #7b7fc4 100%);
+      border-radius: 4px 4px 2px 2px;
+    }
+
+    /* 심지 */
+    .candle-wick {
+      position: absolute;
+      bottom: 178px; left: 50%;
+      transform: translateX(-50%);
+      width: 3px; height: 14px;
+      background: #333;
+      border-radius: 2px;
+    }
+
+    /* 불꽃 */
+    .candle-flame {
+      position: absolute;
+      bottom: 190px; left: 50%;
+      transform: translateX(-50%);
+      width: 22px; height: 34px;
+      background: radial-gradient(ellipse at 50% 80%, #fff176 0%, #ffb300 50%, #ff6f00 100%);
+      border-radius: 50% 50% 30% 30% / 60% 60% 40% 40%;
+      animation: flicker 1.2s ease-in-out infinite alternate;
+      box-shadow: 0 0 12px 4px rgba(255,180,0,.5);
+    }
+    @keyframes flicker {
+      from { transform: translateX(-50%) scaleX(1)   scaleY(1); }
+      to   { transform: translateX(-50%) scaleX(.85) scaleY(1.08); }
+    }
+
+    /* 따봉 이미지 — 초 위에 원형으로 */
+    .dabong-wrap {
+      position: absolute;
+      bottom: 175px; left: 50%;
+      transform: translateX(-50%);
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,.15);
+      z-index: 10;
+    }
+    .dabong-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    /* 떠다니는 하트 & 별 */
+    .float {
+      position: absolute;
+      font-size: 18px;
+      animation: float-up 3s ease-in-out infinite alternate;
+      user-select: none;
+    }
+    @keyframes float-up {
+      from { transform: translateY(0) rotate(-10deg); }
+      to   { transform: translateY(-12px) rotate(10deg); }
+    }
+
+    /* ── 텍스트 영역 ── */
+    .text-area {
+      margin-top: 8px;
+    }
+
+    .main-title {
+      font-family: 'Unbounded', 'Noto Sans KR', sans-serif;
+      font-size: 36px;
+      font-weight: 900;
+      color: #1a1a1a;
+      line-height: 1.15;
+      letter-spacing: -1px;
+    }
+    .main-title span {
+      color: #e05a8a;
+    }
+
+    .sub-line {
+      font-size: 15px;
+      color: #888;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    /* 메시지 칩들 */
+    .chips {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .chip {
+      background: #fff;
+      border-radius: 20px;
+      padding: 16px 22px;
+      font-size: 15px;
+      color: #333;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .chip .icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .chip.danger {
+      background: #fff0f4;
+      border: 2px solid #f4a0c0;
+    }
+    .chip.danger strong {
+      color: #e0305a;
+      font-size: 17px;
+    }
+
+    .footer {
+      margin-top: 28px;
+      font-size: 12px;
+      color: #bbb;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- 일러스트 씬 -->
+  <div class="burst-scene">
+    <div class="burst"></div>
+
+    <!-- 하트들 -->
+    <span class="float" style="top:8%; left:22%; color:#7b7fc4; animation-delay:0s;">♥</span>
+    <span class="float" style="top:5%; left:55%; color:#7b7fc4; animation-delay:.4s;">♥</span>
+    <span class="float" style="top:12%; left:75%; color:#7b7fc4; animation-delay:.8s;">♥</span>
+    <span class="float" style="top:30%; left:10%; color:#7b7fc4; animation-delay:.2s;">♥</span>
+    <span class="float" style="top:20%; left:82%; color:#7b7fc4; animation-delay:1s;">♥</span>
+    <span class="float" style="top:55%; left:6%;  color:#7b7fc4; animation-delay:.6s;">♥</span>
+    <span class="float" style="top:60%; left:86%; color:#7b7fc4; animation-delay:.3s;">♥</span>
+
+    <!-- 별들 -->
+    <span class="float" style="top:14%; left:38%; font-size:14px; color:#f7cba0; animation-delay:.5s;">★</span>
+    <span class="float" style="top:16%; left:64%; font-size:12px; color:#f7cba0; animation-delay:.9s;">★</span>
+    <span class="float" style="top:45%; left:5%;  font-size:13px; color:#f7cba0; animation-delay:.1s;">★</span>
+    <span class="float" style="top:42%; left:87%; font-size:14px; color:#f7cba0; animation-delay:.7s;">★</span>
+    <span class="float" style="top:70%; left:18%; font-size:11px; color:#f7cba0; animation-delay:.3s;">★</span>
+    <span class="float" style="top:68%; left:78%; font-size:12px; color:#f7cba0; animation-delay:.6s;">★</span>
+
+    <!-- 초 -->
+    <div class="candle-body"></div>
+    <div class="candle-wick"></div>
+    <div class="candle-flame"></div>
+
+    <!-- 따봉 이미지 -->
+    <div class="dabong-wrap">
+      <img src="6e65cff1f4e04236.png" alt="따봉" />
+    </div>
+  </div>
+
+  <!-- 텍스트 -->
+  <div class="text-area">
+    <div class="main-title">
+      Julia님<br/>
+      <span>입사</span> 축하해요!
+    </div>
+    <p class="sub-line">새로운 시작을 온 팀이 환영합니다 🎉<br/>앞으로 잘 부탁드려요!</p>
+
+    <div class="chips">
+      <div class="chip">
+        <span class="icon">🏖️</span>
+        <div>
+          <strong>리프레시 휴가도 축하드려요!</strong><br/>
+          <span style="font-size:13px;color:#888;">잘 받으셨죠? 소중히 간직해두세요.</span>
+        </div>
+      </div>
+
+      <div class="chip danger">
+        <span class="icon">🚨</span>
+        <div>
+          <strong>당장 휴가 쓰시면 안 돼요!!!!!</strong><br/>
+          <span style="font-size:13px;color:#c0506a;">나중에 알차게 쓰실 수 있어요 — 아마도 😇</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">따봉 에너지로 만든 페이지 · Welcome, Julia! 🫶</div>
+</div>
+
+</body>
+</html>
