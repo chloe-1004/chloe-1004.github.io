@@ -93,7 +93,7 @@
       to   { transform: translateX(-50%) scaleX(.85) scaleY(1.08); }
     }
 
-    /* 따봉 이미지 — 초 위에 원형으로 */
+    /* 이미지 슬롯 — 초 위에 원형으로 */
     .dabong-wrap {
       position: absolute;
       bottom: 175px; left: 50%;
@@ -106,9 +106,14 @@
       z-index: 10;
     }
     .dabong-wrap img {
+      position: absolute;
+      top: 0; left: 0;
       width: 100%; height: 100%;
       object-fit: cover;
+      border-radius: 50%;
+      transition: opacity 0.8s ease-in-out;
     }
+    .dabong-wrap img.hidden { opacity: 0; }
 
     /* 떠다니는 하트 & 별 */
     .float {
@@ -218,9 +223,10 @@
     <div class="candle-wick"></div>
     <div class="candle-flame"></div>
 
-    <!-- 따봉 이미지 -->
+    <!-- 번갈아 나오는 이미지 -->
     <div class="dabong-wrap">
-      <img src="6e65cff1f4e04236.png" alt="따봉" />
+      <img id="img1" src="julia_park.png" alt="julia" />
+      <img id="img2" src="6e65cff1f4e04236.png" alt="따봉" class="hidden" />
     </div>
   </div>
 
@@ -254,5 +260,15 @@
   <div class="footer">따봉 에너지로 만든 페이지 · Welcome, Julia! 🫶</div>
 </div>
 
+<script>
+  const img1 = document.getElementById('img1');
+  const img2 = document.getElementById('img2');
+  let showingFirst = true;
+  setInterval(() => {
+    showingFirst = !showingFirst;
+    img1.classList.toggle('hidden', !showingFirst);
+    img2.classList.toggle('hidden', showingFirst);
+  }, 2000);
+</script>
 </body>
 </html>
