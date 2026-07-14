@@ -207,7 +207,7 @@
       border-bottom: 3px solid #f9a825;
     }
 
-    /* ---- CAT IMAGE AREA ---- */
+    /* ---- GLENN DANCE AREA ---- */
     .cat-area {
       position: relative;
       z-index: 8;
@@ -218,43 +218,105 @@
     }
     .cat-emoji-scene {
       position: relative;
-      width: 260px;
-      height: 300px;
+      width: 280px;
+      height: 340px;
     }
-    .cat-body {
+
+    /* Main dancing figure */
+    .glenn-dancer {
       position: absolute;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 180px;
+      animation: glennDance 0.6s ease-in-out infinite alternate;
+      transform-origin: center bottom;
+    }
+    @keyframes glennDance {
+      0%   { transform: translateX(-50%) rotate(-8deg) translateY(0px) scaleX(1); }
+      25%  { transform: translateX(-50%) rotate(0deg) translateY(-18px) scaleX(1.04); }
+      50%  { transform: translateX(-50%) rotate(8deg) translateY(0px) scaleX(1); }
+      75%  { transform: translateX(-50%) rotate(0deg) translateY(-12px) scaleX(0.97); }
+      100% { transform: translateX(-50%) rotate(-8deg) translateY(0px) scaleX(1); }
+    }
+
+    .glenn-photo {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #fff;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.25), 0 0 0 3px #ffd93d;
+      display: block;
+    }
+
+    /* Body below photo */
+    .glenn-body {
+      text-align: center;
+      font-size: 90px;
       line-height: 1;
-      animation: catSway 4s ease-in-out infinite;
-      filter: drop-shadow(4px 6px 12px rgba(0,0,0,0.25));
+      margin-top: -10px;
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
     }
-    @keyframes catSway {
-      0%, 100% { transform: translateX(-50%) rotate(-2deg); }
-      50%       { transform: translateX(-50%) rotate(2deg); }
-    }
-    /* glasses overlay */
-    .cat-glasses {
+
+    /* Left arm */
+    .glenn-arm-l {
       position: absolute;
-      top: 22px;
+      font-size: 60px;
+      animation: armLeft 0.6s ease-in-out infinite alternate;
+      transform-origin: right center;
+      z-index: 11;
+    }
+    @keyframes armLeft {
+      0%   { transform: rotate(-120deg) translateX(4px); }
+      100% { transform: rotate(-50deg) translateX(-4px); }
+    }
+
+    /* Right arm */
+    .glenn-arm-r {
+      position: absolute;
+      font-size: 60px;
+      animation: armRight 0.6s ease-in-out infinite alternate;
+      transform-origin: left center;
+      z-index: 11;
+    }
+    @keyframes armRight {
+      0%   { transform: rotate(50deg) translateX(4px); }
+      100% { transform: rotate(120deg) translateX(-4px); }
+    }
+
+    /* Music notes */
+    .music-note {
+      position: absolute;
+      font-size: 24px;
+      animation: noteFloat 1.8s ease-in-out infinite;
+      z-index: 12;
+    }
+    @keyframes noteFloat {
+      0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
+      30%  { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-70px) rotate(20deg); }
+    }
+    .note-1 { top: 30px; left: 10px;  animation-delay: 0s;    }
+    .note-2 { top: 50px; right: 10px; animation-delay: 0.6s;  }
+    .note-3 { top: 20px; left: 50%;   animation-delay: 1.2s;  }
+
+    /* Spotlight effect under Glenn */
+    .spotlight {
+      position: absolute;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 52px;
-      z-index: 9;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-      animation: catSway 4s ease-in-out infinite;
+      width: 160px;
+      height: 24px;
+      background: radial-gradient(ellipse at center, rgba(255,220,50,0.5) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: spotPulse 0.6s ease-in-out infinite alternate;
     }
-    /* flowers */
-    .cat-flowers {
-      position: absolute;
-      bottom: 30px;
-      right: 0;
-      font-size: 80px;
-      z-index: 9;
-      animation: flowerBob 3s ease-in-out infinite;
+    @keyframes spotPulse {
+      0%   { transform: translateX(-50%) scaleX(0.8); opacity: 0.5; }
+      100% { transform: translateX(-50%) scaleX(1.2); opacity: 1; }
     }
+
     @keyframes flowerBob {
       0%, 100% { transform: rotate(5deg) translateY(0); }
       50%       { transform: rotate(-5deg) translateY(-8px); }
@@ -401,12 +463,28 @@
     </div>
   </div>
 
-  <!-- Cat Scene -->
+  <!-- Glenn Dance Scene -->
   <div class="cat-area">
     <div class="cat-emoji-scene">
-      <div class="cat-body">🐱</div>
-      <div class="cat-glasses">🕶️</div>
-      <div class="cat-flowers">💐</div>
+      <!-- Spotlight -->
+      <div class="spotlight"></div>
+
+      <!-- Music notes -->
+      <div class="music-note note-1">🎵</div>
+      <div class="music-note note-2">🎶</div>
+      <div class="music-note note-3">🎵</div>
+
+      <!-- Left arm -->
+      <div class="glenn-arm-l" style="bottom: 145px; left: 10px;">🤚</div>
+
+      <!-- Dancing Glenn -->
+      <div class="glenn-dancer">
+        <img class="glenn-photo" src="glenn.png" alt="Glenn" />
+        <div class="glenn-body">🕺</div>
+      </div>
+
+      <!-- Right arm -->
+      <div class="glenn-arm-r" style="bottom: 145px; right: 10px;">🤚</div>
     </div>
   </div>
 
