@@ -1711,108 +1711,94 @@ body {
 </style>
 
 <style id="rolling-text-css">
-/* ── Kakao Store 방식 ticker ── */
+/* ── rolling wrapper ── */
 .rolling-wrap {
-  position: relative;       /* 그라데이션 pseudo-elem 기준 */
-  display: inline-flex;
+  position: relative;
+  display: grid;
   align-items: center;
   overflow: hidden;
   height: 26px;
   flex: 1;
   min-width: 0;
 }
-/* 상하단 그라데이션 오버레이 */
+/* 상하단 그라데이션 오버레이 (Kakao Store 동일) */
 .rolling-wrap::before,
 .rolling-wrap::after {
   content: "";
   position: absolute;
   left: 0; right: 0;
-  height: 7px;
-  z-index: 1;
+  height: 8px;
+  z-index: 10;
   pointer-events: none;
 }
 .rolling-wrap::before {
   top: 0;
-  background: linear-gradient(to bottom, var(--WHITE001S, #fff) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
 }
 .rolling-wrap::after {
   bottom: 0;
-  background: linear-gradient(to top, var(--WHITE001S, #fff) 0%, transparent 100%);
+  background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
 }
-.rolling-inner {
-  display: flex;
-  flex-direction: column;
-  height: 26px;
-  width: 100%;
-  transition: all .3s ease-out;
-}
+/* 텍스트 아이템 — 모두 같은 grid cell에 겹침 */
 .item-rolling {
-  display: flex;
+  grid-area: 1 / 1;
+  display: inline-flex;
   align-items: center;
   height: 26px;
-  flex-shrink: 0;
   white-space: nowrap;
   font-size: 14px;
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 400;
   color: var(--GRAY400S, #b2b2b2);
   line-height: 26px;
-  transition: all .3s ease-out;
-}
-/* 첫 번째: 기본 표시 */
-.item-rolling:first-of-type,
-.item-rolling:first-of-type.fadeIn {
-  transform: translateY(0);
-  opacity: 1;
-}
-/* 두 번째: 아래서 대기 */
-.item-rolling:last-child,
-.item-rolling:last-child.fadeOut {
-  transform: translateY(calc(-100% + 10px));
+  pointer-events: none;
+  /* 초기 대기 위치: 아래 10px (overflow로 보이지 않음) */
   opacity: 0;
-}
-/* 첫 번째 나가기: 위로 10px + 페이드 */
-.item-rolling:first-of-type.fadeOut {
-  transform: translateY(-10px);
-  opacity: 0;
-}
-/* 두 번째 들어오기: 위로 슬라이드 */
-.item-rolling:last-child.fadeIn {
-  transform: translateY(-100%);
-  opacity: 1;
+  transform: translateY(10px);
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 </style>
 <script>
-(function() {
-  var DISPLAY = 2500;   /* 각 메시지 표시 시간 (ms) — Kakao Store 기준 */
-  var TRANS   = 300;    /* transition 시간 (ms) */
-  var items, idx = 0;
+(function () {
+  var DISPLAY = 2500;  /* 각 텍스트 표시 시간 ms — Kakao Store 기준 */
+  var TRANS   = 300;   /* transition 시간 ms */
+  var items, current = 0;
 
   function roll() {
-    var cur  = items[idx % items.length];
-    var next = items[(idx + 1) % items.length];
-    idx++;
+    var cur  = items[current];
+    var next = items[(current + 1) % items.length];
+    current  = (current + 1) % items.length;
 
-    /* 현재 → fadeOut (위로 10px + 투명) */
-    cur.classList.add('fadeOut');
-    cur.classList.remove('fadeIn');
+    /* 현재 텍스트: 위로 10px + 페이드 아웃 (Kakao Store 동일) */
+    cur.style.transform = 'translateY(-10px)';
+    cur.style.opacity   = '0';
 
-    /* 다음 → fadeIn (위로 슬라이드 인) */
-    next.classList.add('fadeIn');
-    next.classList.remove('fadeOut');
+    /* 다음 텍스트: 아래서 위로 슬라이드 인 */
+    next.style.transform = 'translateY(0)';
+    next.style.opacity   = '1';
 
-    /* transition 끝나면 클래스 정리 */
-    setTimeout(function() {
-      cur.classList.remove('fadeOut');
-      next.classList.remove('fadeIn');
+    /* transition 끝난 뒤 → cur 즉시 초기 위치(아래 10px)로 무음 리셋 */
+    setTimeout(function () {
+      cur.style.transition = 'none';
+      cur.style.transform  = 'translateY(10px)';
+      cur.style.opacity    = '0';
+      cur.offsetHeight;        /* reflow 강제 */
+      cur.style.transition = '';
     }, TRANS + 50);
 
     setTimeout(roll, DISPLAY + TRANS);
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     items = document.querySelectorAll('.item-rolling');
-    if (items.length >= 2) setTimeout(roll, DISPLAY);
+    if (!items.length) return;
+    /* 첫 텍스트 즉시 표시 (transition 없이) */
+    items[0].style.transition = 'none';
+    items[0].style.transform  = 'translateY(0)';
+    items[0].style.opacity    = '1';
+    items[0].offsetHeight;
+    items[0].style.transition = '';
+    setTimeout(roll, DISPLAY);
   });
 })();
 </script>
@@ -2247,10 +2233,8 @@ body {
               <div class="box-hugh-grow row-gap10-middle">
                 <div class="box-auto text14-medium">삭제중</div>
                 <div class="rolling-wrap">
-          <div class="rolling-inner">
-            <span class="item-rolling">화면을 벗어나도 계속 진행돼요.</span>
-            <span class="item-rolling">파일 갯수나 크기에 따라 시간이 소요될 수 있어요.</span>
-          </div>
+          <span class="item-rolling">화면을 벗어나도 계속 진행돼요.</span>
+          <span class="item-rolling">파일 갯수나 크기에 따라 시간이 소요될 수 있어요.</span>
         </div>
               </div>
             </div>
