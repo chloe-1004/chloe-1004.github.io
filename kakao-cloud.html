@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카카오 클라우드</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      background: #ffffff;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      color: #1a1a1a;
+    }
+
+    /* ─── Sidebar ─── */
+    .sidebar {
+      width: 224px;
+      min-width: 224px;
+      background: #f7f7f7;
+      border-right: 1px solid #e8e8e8;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-top {
+      padding: 20px 16px 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 4px 16px;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      background: #FAE100;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #3A1D1D;
+    }
+
+    .brand-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .new-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      padding: 9px 12px;
+      background: #FAE100;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+
+    .new-btn:hover { background: #f0d800; }
+
+    .nav-section {
+      padding: 0 8px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #999;
+      padding: 8px 8px 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #333;
+      cursor: pointer;
+      margin-bottom: 1px;
+    }
+
+    .nav-item:hover { background: #ededed; }
+    .nav-item.active { background: #e6e6e6; font-weight: 600; color: #1a1a1a; }
+
+    .nav-item .icon {
+      width: 18px;
+      text-align: center;
+      font-size: 14px;
+      opacity: 0.7;
+      flex-shrink: 0;
+    }
+
+    .nav-item.active .icon { opacity: 1; }
+
+    .nav-badge {
+      margin-left: auto;
+      background: #FF5050;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 10px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e4e4e4;
+      margin: 8px 16px;
+    }
+
+    /* Storage capacity */
+    .storage-info {
+      padding: 12px 16px 16px;
+      margin-top: auto;
+    }
+
+    .storage-label {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .storage-bar-track {
+      width: 100%;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .storage-bar-fill {
+      height: 100%;
+      width: 40%;
+      background: #FAE100;
+      border-radius: 2px;
+    }
+
+    .storage-numbers {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .storage-numbers strong { color: #1a1a1a; font-weight: 600; }
+
+    /* ─── Main Area ─── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top header bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      height: 52px;
+      border-bottom: 1px solid #ebebeb;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .breadcrumb {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .topbar-spacer { flex: 1; }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f4f4f4;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: #999;
+      cursor: pointer;
+      min-width: 200px;
+    }
+
+    .upload-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .upload-btn:hover { background: #f8f8f8; }
+
+    /* Content body */
+    .content-body {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Deletion Status Bar (rolling text) ─── */
+    .deletion-bar {
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      height: 48px;
+      border-bottom: 1px solid #e8e8e8;
+      background: #fff;
+      flex-shrink: 0;
+      gap: 8px;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ddd;
+      border-top-color: #555;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .deletion-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+      flex-shrink: 0;
+    }
+
+    /* Rolling text container */
+    .rolling-text-wrap {
+      height: 20px;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .rolling-text-inner {
+      display: flex;
+      flex-direction: column;
+      animation: rollUp 6s ease-in-out infinite;
+    }
+
+    .rolling-text-inner span {
+      height: 20px;
+      line-height: 20px;
+      font-size: 13px;
+      color: #888;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @keyframes rollUp {
+      0%   { transform: translateY(0);    }
+      35%  { transform: translateY(0);    }
+      45%  { transform: translateY(-20px); }
+      80%  { transform: translateY(-20px); }
+      90%  { transform: translateY(-40px); }
+      100% { transform: translateY(-40px); }
+    }
+
+    .deletion-controls {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+    }
+
+    .ctrl-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 12px;
+      font-size: 12px;
+      color: #555;
+      cursor: pointer;
+      border-left: 1px solid #e8e8e8;
+      white-space: nowrap;
+    }
+
+    .ctrl-btn:first-child { border-left: none; }
+    .ctrl-btn:hover { color: #1a1a1a; }
+
+    /* ─── File Listing ─── */
+    .file-section {
+      padding: 0 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 0 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .section-count {
+      font-weight: 400;
+      color: #999;
+      margin-left: 4px;
+    }
+
+    .folder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+      padding-bottom: 20px;
+    }
+
+    .folder-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .folder-card:hover { background: #f5f5f5; }
+
+    .folder-icon {
+      font-size: 32px;
+    }
+
+    .folder-name {
+      font-size: 12px;
+      color: #333;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-all;
+    }
+
+    .folder-count {
+      font-size: 11px;
+      color: #999;
+    }
+
+    /* File list table */
+    .file-list {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .file-list th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      color: #aaa;
+      padding: 6px 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .file-list td {
+      padding: 10px 8px;
+      font-size: 13px;
+      color: #333;
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    .file-list tr:hover td { background: #fafafa; }
+
+    .file-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-type-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .file-name-text {
+      font-size: 13px;
+      color: #1a1a1a;
+    }
+
+    .file-meta {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    /* Checkboxes */
+    .file-list .check-col {
+      width: 36px;
+    }
+
+    .file-checkbox {
+      width: 15px;
+      height: 15px;
+      border-radius: 3px;
+      border: 1.5px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+      appearance: none;
+    }
+
+    .file-checkbox:checked {
+      background: #FAE100;
+      border-color: #FAE100;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="brand">
+        <div class="brand-icon">K</div>
+        <span class="brand-name">카카오 클라우드</span>
+      </div>
+      <button class="new-btn">
+        <span>＋</span> 새로 만들기
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-item active">
+        <span class="icon">🏠</span> 홈
+      </div>
+      <div class="nav-item">
+        <span class="icon">⭐</span> 중요
+      </div>
+      <div class="nav-item">
+        <span class="icon">🕐</span> 최근
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">카카오톡</div>
+      <div class="nav-item">
+        <span class="icon">💬</span> 대화 백업
+      </div>
+      <div class="nav-item">
+        <span class="icon">🖼️</span> 사진·동영상
+      </div>
+      <div class="nav-item">
+        <span class="icon">📎</span> 파일
+      </div>
+      <div class="nav-item">
+        <span class="icon">🔗</span> 링크
+      </div>
+      <div class="nav-item">
+        <span class="icon">📦</span> 대용량 파일 공유
+      </div>
+      <div class="nav-item">
+        <span class="icon">👥</span> 팀 데이터
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">관리</div>
+      <div class="nav-item">
+        <span class="icon">📋</span> 연락처
+      </div>
+      <div class="nav-item">
+        <span class="icon">🔑</span> 비밀번호
+      </div>
+      <div class="nav-item">
+        <span class="icon">🗑️</span> 휴지통
+        <span class="nav-badge">3</span>
+      </div>
+      <div class="nav-item">
+        <span class="icon">📢</span> 공지사항
+      </div>
+    </div>
+
+    <div class="storage-info">
+      <div class="storage-label">저장공간</div>
+      <div class="storage-bar-track">
+        <div class="storage-bar-fill"></div>
+      </div>
+      <div class="storage-numbers">
+        <strong>120GB</strong> / 300GB 사용 중 &nbsp;·&nbsp; 35.8GB 남음
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="main">
+
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="breadcrumb">내 클라우드</div>
+      <div class="topbar-spacer"></div>
+      <div class="search-box">
+        <span>🔍</span> 파일명, 보낸사람 검색
+      </div>
+      <button class="upload-btn">
+        <span>⬆️</span> 업로드
+      </button>
+    </div>
+
+    <div class="content-body">
+
+      <!-- ── Deletion Status Bar (rolling text) ── -->
+      <div class="deletion-bar">
+        <div class="spinner"></div>
+        <span class="deletion-label">삭제중</span>
+
+        <!-- Rolling text: two messages cycle upward -->
+        <div class="rolling-text-wrap">
+          <div class="rolling-text-inner">
+            <span>화면을 벗어나도 계속 진행돼요.</span>
+            <span>파일 갯수나 크기에 따라 시간이 소요될 수 있어요.</span>
+            <span>화면을 벗어나도 계속 진행돼요.</span>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="deletion-controls">
+          <span class="ctrl-btn">최신순 ∨</span>
+          <span class="ctrl-btn">작게보기 ⊞</span>
+          <span class="ctrl-btn">파일정보 ⓘ</span>
+        </div>
+      </div>
+
+      <!-- Folder grid -->
+      <div class="file-section">
+        <div class="section-header">
+          폴더 <span class="section-count">· 5개</span>
+        </div>
+        <div class="folder-grid">
+          <div class="folder-card">
+            <span class="folder-icon">📁</span>
+            <div class="folder-name">톡클라우드스쿼드</div>
+            <div class="folder-count">1,284개</div>
+          </div>
+          <div class="folder-card">
+            <span class="folder-icon">📁</span>
+            <div class="folder-name">쇼핑 클라우드 정보방</div>
+            <div class="folder-count">392개</div>
+          </div>
+          <div class="folder-card">
+            <span class="folder-icon">📁</span>
+            <div class="folder-name">가나다</div>
+            <div class="folder-count">45개</div>
+          </div>
+          <div class="folder-card">
+            <span class="folder-icon">📁</span>
+            <div class="folder-name">일이삼사오육칠팔구..</div>
+            <div class="folder-count">118개</div>
+          </div>
+          <div class="folder-card">
+            <span class="folder-icon">📁</span>
+            <div class="folder-name">나간 채팅방</div>
+            <div class="folder-count">62개</div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          파일 <span class="section-count">· 3,454개 · 238GB</span>
+        </div>
+        <table class="file-list">
+          <thead>
+            <tr>
+              <th class="check-col"><input type="checkbox" class="file-checkbox"></th>
+              <th>이름</th>
+              <th>크기</th>
+              <th>수정일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" class="file-checkbox"></td>
+              <td><div class="file-name-cell"><span class="file-type-icon">🖼️</span><span class="file-name-text">KakaoTalk_20231023_142530.jpg</span></div></td>
+              <td class="file-meta">4.2 MB</td>
+              <td class="file-meta">2023. 10. 23</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="file-checkbox"></td>
+              <td><div class="file-name-cell"><span class="file-type-icon">🎥</span><span class="file-name-text">KakaoTalk_20231021_video.mp4</span></div></td>
+              <td class="file-meta">128 MB</td>
+              <td class="file-meta">2023. 10. 21</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="file-checkbox"></td>
+              <td><div class="file-name-cell"><span class="file-type-icon">📄</span><span class="file-name-text">기획서_최종_v3.pdf</span></div></td>
+              <td class="file-meta">2.8 MB</td>
+              <td class="file-meta">2023. 10. 18</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="file-checkbox"></td>
+              <td><div class="file-name-cell"><span class="file-type-icon">🖼️</span><span class="file-name-text">스크린샷 2023-10-17 오후 3.22.png</span></div></td>
+              <td class="file-meta">812 KB</td>
+              <td class="file-meta">2023. 10. 17</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="file-checkbox"></td>
+              <td><div class="file-name-cell"><span class="file-type-icon">📊</span><span class="file-name-text">데이터분석_결과.xlsx</span></div></td>
+              <td class="file-meta">1.1 MB</td>
+              <td class="file-meta">2023. 10. 15</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="file-checkbox"></td>
+              <td><div class="file-name-cell"><span class="file-type-icon">🖼️</span><span class="file-name-text">KakaoTalk_20231014_085412.jpg</span></div></td>
+              <td class="file-meta">3.5 MB</td>
+              <td class="file-meta">2023. 10. 14</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="file-checkbox"></td>
+              <td><div class="file-name-cell"><span class="file-type-icon">🎵</span><span class="file-name-text">voice_memo_1013.m4a</span></div></td>
+              <td class="file-meta">6.7 MB</td>
+              <td class="file-meta">2023. 10. 13</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="file-checkbox"></td>
+              <td><div class="file-name-cell"><span class="file-type-icon">📄</span><span class="file-name-text">업무일지_10월.docx</span></div></td>
+              <td class="file-meta">540 KB</td>
+              <td class="file-meta">2023. 10. 10</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /content-body -->
+  </main>
+
+</body>
+</html>
