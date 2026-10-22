@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카페 &amp; 장소 안내 | TalkCloud 플레이샵</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --blue: #6EB5D9; --orange: #E8834A; --green: #5A9E52;
+      --cream: #FFF8F0; --road: #DDD0BC; --text: #3D3D3D;
+    }
+    body { font-family: 'Noto Sans KR', -apple-system, sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+    /* HEADER */
+    .page-header { background: linear-gradient(135deg, #6EB5D9 0%, #4A8FAF 100%); position: relative; overflow: hidden; }
+    .header-inner { max-width: 780px; margin: 0 auto; padding: 36px 24px; position: relative; z-index: 1; }
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.83em; font-weight: 600; margin-bottom: 20px; transition: color 0.15s; }
+    .back-btn:hover { color: #fff; }
+    .page-header h1 { color: #fff; font-size: 1.8em; font-weight: 900; }
+    .page-header .sub { color: rgba(255,255,255,0.8); font-size: 0.88em; margin-top: 6px; }
+    .header-deco { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); font-size: 4em; opacity: 0.2; }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 36px 24px; }
+
+    /* FILTER */
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+    .filter-btn {
+      padding: 8px 18px; border-radius: 20px;
+      border: 2px solid var(--road); background: #fff;
+      cursor: pointer; font-size: 0.83em; font-weight: 700;
+      font-family: inherit; color: #888; transition: all 0.15s;
+    }
+    .filter-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .filter-btn:hover:not(.active) { border-color: var(--blue); color: var(--blue); }
+
+    /* SECTION */
+    .section-title { font-size: 0.93em; font-weight: 800; margin: 28px 0 16px; display: flex; align-items: center; gap: 8px; }
+    .section-title::after { content: ''; flex: 1; height: 2px; background: var(--road); }
+
+    /* PLACE CARD */
+    .place-card {
+      background: #fff; border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border: 1.5px solid #F0E4D0;
+      padding: 18px 20px; margin-bottom: 12px;
+      display: flex; align-items: flex-start; gap: 14px;
+      transition: box-shadow 0.18s, transform 0.18s;
+    }
+    .place-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.11); transform: translateY(-2px); }
+    .place-card.highlight { border-color: #F5C0B0; background: #FFF8F5; }
+
+    .place-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4em; flex-shrink: 0;
+    }
+    .cat-카페 .place-icon { background: #E8F4FB; }
+    .cat-디저트 .place-icon { background: #FFF0E8; }
+    .cat-식당 .place-icon { background: #E8F5E0; }
+    .cat-교통 .place-icon { background: #F5EDE0; }
+
+    .place-info { flex: 1; min-width: 0; }
+    .place-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .place-name { font-size: 0.97em; font-weight: 800; }
+    .place-cat {
+      font-size: 0.68em; font-weight: 700; padding: 2px 9px; border-radius: 20px;
+    }
+    .cat-카페 .place-cat { background: #E8F4FB; color: #3A7A9A; }
+    .cat-디저트 .place-cat { background: #FFF0E8; color: #9A5A2A; }
+    .cat-식당 .place-cat { background: #E8F5E0; color: #3A7A3A; }
+    .cat-교통 .place-cat { background: #F5EDE0; color: #7A5A2A; }
+
+    .recommend-badge { font-size: 0.65em; font-weight: 700; background: #FFE0DC; color: #C03030; padding: 2px 8px; border-radius: 10px; }
+
+    .place-desc { font-size: 0.8em; color: #666; line-height: 1.7; margin-bottom: 8px; }
+    .place-desc .highlight-text { color: var(--orange); font-weight: 600; }
+
+    .place-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--blue); color: #fff;
+      padding: 5px 14px; border-radius: 8px;
+      font-size: 0.75em; font-weight: 700;
+      text-decoration: none; transition: background 0.15s;
+    }
+    .place-link:hover { background: #4A96BF; }
+    .place-link.naver { background: #03C75A; }
+    .place-link.naver:hover { background: #02A04A; }
+
+    /* AREA INFO */
+    .area-info {
+      background: linear-gradient(135deg, #E8F4FB, #D8ECF8);
+      border-radius: 16px; padding: 20px 24px; margin-bottom: 28px;
+    }
+    .area-info h3 { font-size: 0.93em; font-weight: 800; color: #3A6A8A; margin-bottom: 8px; }
+    .area-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .area-tag { background: rgba(255,255,255,0.8); border-radius: 20px; padding: 5px 14px; font-size: 0.78em; font-weight: 600; color: #4A7A9A; }
+
+    .hidden { display: none !important; }
+
+    .page-footer { text-align: center; padding: 28px 24px; font-size: 0.8em; color: #AAA; border-top: 1px dashed var(--road); }
+    .page-footer a { color: var(--blue); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-inner">
+    <a href="playshop.html" class="back-btn">← 메인으로</a>
+    <h1>☕ 카페 &amp; 장소 안내</h1>
+    <div class="sub">조별 자유 시간 (15:30~17:00) · 경주 황리단길 &amp; 대릉원 일대</div>
+  </div>
+  <div class="header-deco">🗺️</div>
+</div>
+
+<div class="container">
+
+  <!-- 지역 정보 -->
+  <div class="area-info">
+    <h3>📍 주요 지역</h3>
+    <div class="area-tags">
+      <span class="area-tag">🏛️ 황리단길</span>
+      <span class="area-tag">🌳 대릉원 일대</span>
+      <span class="area-tag">🏯 첨성대 근처</span>
+    </div>
+  </div>
+
+  <!-- 필터 -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filter(this,'전체')">전체</button>
+    <button class="filter-btn" onclick="filter(this,'카페')">☕ 카페</button>
+    <button class="filter-btn" onclick="filter(this,'디저트')">🍡 디저트</button>
+    <button class="filter-btn" onclick="filter(this,'식당')">🍽️ 식당</button>
+    <button class="filter-btn" onclick="filter(this,'교통')">🚌 교통</button>
+  </div>
+
+  <!-- 단체 추천 -->
+  <div class="section-title">⭐ 단체 이용 추천</div>
+
+  <div class="place-card cat-카페 highlight" data-cat="카페">
+    <div class="place-icon">☕</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">1894사랑채</span>
+        <span class="place-cat">카페</span>
+        <span class="recommend-badge">단체 추천</span>
+      </div>
+      <div class="place-desc">
+        황리단길 전통 <span class="highlight-text">한옥 카페</span> · 250~300명 수용 가능<br>
+        온돌룸(2~10인) 8개, 홀예약(15~20인) 1개<br>
+        <span class="highlight-text">조별로 온돌룸 예약 가능!</span>
+      </div>
+      <a href="https://naver.me/GeUR9sAO" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <div class="place-card cat-카페 highlight" data-cat="카페">
+    <div class="place-icon">☕</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">조르바</span>
+        <span class="place-cat">카페</span>
+        <span class="recommend-badge">단체 가능</span>
+      </div>
+      <div class="place-desc">
+        <span class="highlight-text">대릉원 뷰</span> · 단체 이용 가능 (몇 명까지인지 확인 필요)<br>
+        영업 19:00까지
+      </div>
+      <a href="https://naver.me/5vcHxUOT" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <div class="place-card cat-카페 highlight" data-cat="카페">
+    <div class="place-icon">☕</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">이스트 1779</span>
+        <span class="place-cat">카페</span>
+        <span class="recommend-badge">대관 가능</span>
+      </div>
+      <div class="place-desc">대관 가능한 것 같아요</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="https://naver.me/5S9QuZ9A" target="_blank" class="place-link naver">네이버 지도 →</a>
+        <a href="https://www.1779.kr/eyst1779" target="_blank" class="place-link">공식 사이트 →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 카페 -->
+  <div class="section-title" data-section="카페">☕ 카페</div>
+
+  <div class="place-card cat-카페" data-cat="카페">
+    <div class="place-icon">☕</div>
+    <div class="place-info">
+      <div class="place-top"><span class="place-name">테라로사</span><span class="place-cat">카페</span></div>
+      <div class="place-desc">한옥 대형 카페 · 황남동</div>
+      <a href="https://naver.me/xv3lMWUq" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <div class="place-card cat-카페" data-cat="카페">
+    <div class="place-icon">☕</div>
+    <div class="place-info">
+      <div class="place-top"><span class="place-name">카페마르쉐</span><span class="place-cat">카페</span></div>
+      <div class="place-desc">꽃밭 + 한옥 카페 · 황남동</div>
+    </div>
+  </div>
+
+  <div class="place-card cat-카페" data-cat="카페">
+    <div class="place-icon">☕</div>
+    <div class="place-info">
+      <div class="place-top"><span class="place-name">로제 드 파리</span><span class="place-cat">카페</span></div>
+      <div class="place-desc">황리단길 천마총 앞 · 주차는 인근 공원 주차장</div>
+      <a href="https://naver.me/FJbWJDXv" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <!-- 디저트 -->
+  <div class="section-title" data-section="디저트">🍡 디저트</div>
+
+  <div class="place-card cat-디저트" data-cat="디저트">
+    <div class="place-icon">🍞</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">최영화빵 황리단길점</span>
+        <span class="place-cat">디저트</span>
+      </div>
+      <div class="place-desc">
+        <span class="highlight-text">경주빵</span> · 황리단길<br>
+        ⚠️ 18:00 영업 종료, 10개 14,000원 — 미리 사전 주문 필요
+      </div>
+      <a href="https://naver.me/5WOQPIQf" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <div class="place-card cat-디저트" data-cat="디저트">
+    <div class="place-icon">🥖</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">월지빵</span>
+        <span class="place-cat">디저트</span>
+      </div>
+      <div class="place-desc">
+        <span class="highlight-text">월지소금빵</span> · 황리단길<br>
+        ⚠️ 18:00 영업 종료, 100박스 한정, 10개 17,000원 — 사전 주문 필요
+      </div>
+      <a href="https://naver.me/FpxviYCY" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <div class="place-card cat-디저트" data-cat="디저트">
+    <div class="place-icon">🫓</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">경주얼굴빵 황리단길맛집</span>
+        <span class="place-cat">디저트</span>
+      </div>
+      <div class="place-desc">
+        <span class="highlight-text">대릉원 셀피 명소</span> — 경주얼굴빵 들고 인증샷!<br>
+        흑임자2 + 고구마2 = 8,500원
+      </div>
+      <a href="https://naver.me/xv3DpJRq" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <div class="place-card cat-디저트" data-cat="디저트">
+    <div class="place-icon">🍫</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">첨성대초콜릿</span>
+        <span class="place-cat">디저트</span>
+      </div>
+      <div class="place-desc">
+        황리단길 · <span class="highlight-text">APEC 만찬에 올라간 초콜릿</span><br>
+        트래블팩 6구 15,000원 / 12구 28,000원
+      </div>
+      <a href="https://naver.me/5SSROgPk" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <div class="place-card cat-디저트" data-cat="디저트">
+    <div class="place-icon">🐰</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">미피카페</span>
+        <span class="place-cat">디저트</span>
+      </div>
+      <div class="place-desc">황리단길 · 미피 아이스크림 · 미피 기념품 추울듯</div>
+      <a href="https://naver.me/5SSROgPk" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <div class="place-card cat-디저트" data-cat="디저트">
+    <div class="place-icon">🍢</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">황남쫀드기</span>
+        <span class="place-cat">디저트</span>
+      </div>
+      <div class="place-desc">황리단길 · 시즈닝 뿌린 쫀드기 · 4,000원</div>
+      <a href="https://naver.me/xFLuriqH" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <div class="place-card cat-디저트" data-cat="디저트">
+    <div class="place-icon">🫓</div>
+    <div class="place-info">
+      <div class="place-top">
+        <span class="place-name">황남당</span>
+        <span class="place-cat">디저트</span>
+      </div>
+      <div class="place-desc">
+        황리단길 · 6가지 맛 찰보리빵 (팥/딸기/흑임자/율무/팥크림치즈/쑥)<br>
+        19,000원
+      </div>
+      <a href="https://naver.me/G8s6QJch" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <!-- 식당 -->
+  <div class="section-title" data-section="식당">🍽️ 식당</div>
+
+  <div class="place-card cat-식당" data-cat="식당">
+    <div class="place-icon">🥩</div>
+    <div class="place-info">
+      <div class="place-top"><span class="place-name">토암한우채</span><span class="place-cat">식당</span></div>
+      <div class="place-desc">불국사 인근 · 단체 가능 (정육식당 느낌)</div>
+      <a href="https://naver.me/GNWkIJ4q" target="_blank" class="place-link naver">네이버 지도 →</a>
+    </div>
+  </div>
+
+  <!-- 교통 -->
+  <div class="section-title" data-section="교통">🚌 교통</div>
+
+  <div class="place-card cat-교통" data-cat="교통">
+    <div class="place-icon">🚌</div>
+    <div class="place-info">
+      <div class="place-top"><span class="place-name">돌고래여행사 경주지점</span><span class="place-cat">교통</span></div>
+      <div class="place-desc">경주 버스 · 견적 문의 필요 · ☎️ 0507-1444-1883</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <a href="playshop.html">← 메인으로 돌아가기</a>
+</div>
+
+<script>
+  function filter(btn, cat) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.place-card').forEach(card => {
+      if (cat === '전체' || card.dataset.cat === cat) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    document.querySelectorAll('.section-title[data-section]').forEach(title => {
+      if (cat === '전체' || title.dataset.section === cat) {
+        title.classList.remove('hidden');
+      } else {
+        title.classList.add('hidden');
+      }
+    });
+  }
+</script>
+</body>
+</html>

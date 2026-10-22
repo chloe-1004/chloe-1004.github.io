@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사진 업로드 | TalkCloud 플레이샵</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --blue: #6EB5D9; --orange: #E8834A; --green: #5A9E52;
+      --cream: #FFF8F0; --road: #DDD0BC; --text: #3D3D3D;
+    }
+    body { font-family: 'Noto Sans KR', -apple-system, sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+    /* HEADER */
+    .page-header {
+      background: linear-gradient(135deg, #E8834A 0%, #C06030 100%);
+      position: relative; overflow: hidden;
+    }
+    .header-inner { max-width: 780px; margin: 0 auto; padding: 36px 24px; position: relative; z-index: 1; }
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.83em; font-weight: 600; margin-bottom: 20px; transition: color 0.15s; }
+    .back-btn:hover { color: #fff; }
+    .page-header h1 { color: #fff; font-size: 1.8em; font-weight: 900; }
+    .page-header .sub { color: rgba(255,255,255,0.8); font-size: 0.88em; margin-top: 6px; }
+    .header-deco { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); font-size: 4em; opacity: 0.2; }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 36px 24px; }
+
+    /* GROUP SELECTOR */
+    .group-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+    .group-btn {
+      padding: 8px 18px; border-radius: 20px; border: 2px solid var(--road);
+      background: #fff; cursor: pointer; font-size: 0.83em; font-weight: 700;
+      font-family: inherit; color: #888; transition: all 0.15s;
+    }
+    .group-btn.active, .group-btn:hover {
+      background: var(--orange); border-color: var(--orange); color: #fff;
+    }
+
+    /* UPLOAD AREA */
+    .upload-area {
+      border: 2.5px dashed var(--road); border-radius: 20px;
+      padding: 48px 24px; text-align: center; cursor: pointer;
+      background: #fff; transition: all 0.2s; margin-bottom: 28px;
+    }
+    .upload-area:hover, .upload-area.drag { border-color: var(--orange); background: #FFF8F0; }
+    .upload-icon { font-size: 3em; margin-bottom: 14px; }
+    .upload-title { font-size: 1em; font-weight: 700; margin-bottom: 6px; }
+    .upload-sub { font-size: 0.8em; color: #999; line-height: 1.7; }
+    .upload-btn-wrap { margin-top: 20px; }
+    .upload-btn {
+      display: inline-block; background: var(--orange); color: #fff;
+      padding: 10px 28px; border-radius: 10px; font-weight: 700;
+      font-size: 0.87em; cursor: pointer; transition: background 0.15s;
+      border: none; font-family: inherit;
+    }
+    .upload-btn:hover { background: #C06030; }
+    #fileInput { display: none; }
+
+    /* SECTION TITLE */
+    .section-title { font-size: 0.95em; font-weight: 800; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .section-title::after { content: ''; flex: 1; height: 2px; background: var(--road); }
+
+    /* PHOTO GRID */
+    .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media (max-width: 480px) { .photo-grid { grid-template-columns: repeat(2, 1fr); } }
+    .photo-item {
+      position: relative; aspect-ratio: 1;
+      border-radius: 12px; overflow: hidden;
+      background: #F0E8DC; cursor: pointer;
+    }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.4); opacity: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.2s;
+    }
+    .photo-item:hover .photo-overlay { opacity: 1; }
+    .photo-del {
+      background: rgba(255,80,80,0.9); color: #fff; border: none;
+      width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+      font-size: 1em; font-weight: 700;
+    }
+    .photo-tag {
+      position: absolute; top: 8px; left: 8px;
+      background: var(--orange); color: #fff;
+      font-size: 0.65em; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px;
+    }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 40px 24px; color: #BBB; }
+    .empty-state .empty-icon { font-size: 2.5em; margin-bottom: 10px; }
+    .empty-state p { font-size: 0.85em; line-height: 1.7; }
+
+    /* NOTICE */
+    .cloud-notice {
+      background: #E8F4FB; border: 1.5px solid #B8D8F0;
+      border-radius: 14px; padding: 16px 20px;
+      font-size: 0.82em; color: #3A6A8A; line-height: 1.8;
+      margin-top: 28px;
+    }
+    .cloud-notice strong { color: #2A5A7A; }
+
+    /* LIGHTBOX */
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
+    .lightbox.show { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 12px; object-fit: contain; }
+    .lightbox-close { position: fixed; top: 20px; right: 24px; color: #fff; font-size: 2em; cursor: pointer; background: none; border: none; line-height: 1; }
+
+    .page-footer { text-align: center; padding: 28px 24px; font-size: 0.8em; color: #AAA; border-top: 1px dashed var(--road); }
+    .page-footer a { color: var(--blue); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-inner">
+    <a href="playshop.html" class="back-btn">← 메인으로</a>
+    <h1>📸 사진 업로드</h1>
+    <div class="sub">우리 조의 소중한 추억을 올려요</div>
+  </div>
+  <div class="header-deco">📸</div>
+</div>
+
+<div class="container">
+
+  <!-- Group selector -->
+  <div class="section-title">조 선택</div>
+  <div class="group-selector">
+    <button class="group-btn active" onclick="selectGroup(this,'1조')">🔵 1조</button>
+    <button class="group-btn" onclick="selectGroup(this,'2조')">🟠 2조</button>
+    <button class="group-btn" onclick="selectGroup(this,'3조')">🟢 3조</button>
+    <button class="group-btn" onclick="selectGroup(this,'4조')">🟣 4조</button>
+    <button class="group-btn" onclick="selectGroup(this,'5조')">🟡 5조</button>
+    <button class="group-btn" onclick="selectGroup(this,'6조')">🔴 6조</button>
+  </div>
+
+  <!-- Upload area -->
+  <div class="upload-area" id="dropZone"
+       ondragover="handleDrag(event,true)" ondragleave="handleDrag(event,false)" ondrop="handleDrop(event)">
+    <div class="upload-icon">🖼️</div>
+    <div class="upload-title">사진을 드래그하거나 버튼을 눌러 업로드하세요</div>
+    <div class="upload-sub">JPG, PNG, HEIC 지원 · 여러 장 동시 선택 가능<br>사진은 이 기기의 브라우저에 저장됩니다</div>
+    <div class="upload-btn-wrap">
+      <label class="upload-btn" for="fileInput">📁 사진 선택하기</label>
+      <input type="file" id="fileInput" multiple accept="image/*" onchange="handleFiles(this.files)">
+    </div>
+  </div>
+
+  <!-- Photo gallery -->
+  <div class="section-title" id="galleryTitle">📷 <span id="groupLabel">1조</span> 사진 갤러리</div>
+  <div class="photo-grid" id="photoGrid">
+    <div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-icon">🍂</div>
+      <p>아직 업로드된 사진이 없어요.<br>위에서 사진을 추가해 보세요!</p>
+    </div>
+  </div>
+
+  <div class="cloud-notice">
+    💡 <strong>안내</strong> — 현재 사진은 이 기기의 브라우저(localStorage)에 저장됩니다. 조원 전체와 공유하려면 사진을 <strong>카카오톡 수학여행 채널</strong>에도 함께 올려주세요!
+  </div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<div class="page-footer">
+  <a href="playshop.html">← 메인으로 돌아가기</a>
+</div>
+
+<script>
+  let currentGroup = '1조';
+  const STORAGE_KEY = 'playshop_photos';
+
+  function getPhotos() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+  }
+  function savePhotos(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { alert('저장 공간이 부족합니다. 일부 사진을 삭제해주세요.'); }
+  }
+
+  function selectGroup(btn, group) {
+    document.querySelectorAll('.group-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentGroup = group;
+    document.getElementById('groupLabel').textContent = group;
+    renderGallery();
+  }
+
+  function renderGallery() {
+    const grid = document.getElementById('photoGrid');
+    const photos = getPhotos();
+    const groupPhotos = photos[currentGroup] || [];
+    if (groupPhotos.length === 0) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🍂</div><p>아직 업로드된 사진이 없어요.<br>위에서 사진을 추가해 보세요!</p></div>`;
+      return;
+    }
+    grid.innerHTML = groupPhotos.map((src, i) => `
+      <div class="photo-item">
+        <img src="${src}" alt="photo" onclick="openLightbox('${src}')">
+        <div class="photo-overlay">
+          <button class="photo-del" onclick="deletePhoto(event,${i})">🗑</button>
+        </div>
+        <div class="photo-tag">${currentGroup}</div>
+      </div>
+    `).join('');
+  }
+
+  function handleFiles(files) {
+    Array.from(files).forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const photos = getPhotos();
+        if (!photos[currentGroup]) photos[currentGroup] = [];
+        photos[currentGroup].push(e.target.result);
+        savePhotos(photos);
+        renderGallery();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function deletePhoto(e, idx) {
+    e.stopPropagation();
+    if (!confirm('이 사진을 삭제할까요?')) return;
+    const photos = getPhotos();
+    photos[currentGroup].splice(idx, 1);
+    savePhotos(photos);
+    renderGallery();
+  }
+
+  function handleDrag(e, over) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.toggle('drag', over);
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.remove('drag');
+    handleFiles(e.dataTransfer.files);
+  }
+
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('show');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('show');
+  }
+
+  renderGallery();
+</script>
+</body>
+</html>

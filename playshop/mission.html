@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>조별 미션 | TalkCloud 플레이샵</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --blue: #6EB5D9; --orange: #E8834A; --green: #5A9E52;
+      --cream: #FFF8F0; --road: #DDD0BC; --text: #3D3D3D;
+    }
+    body { font-family: 'Noto Sans KR', -apple-system, sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+    /* HEADER */
+    .page-header {
+      background: linear-gradient(135deg, #5A9E52 0%, #3D7A35 100%);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-inner {
+      max-width: 780px; margin: 0 auto; padding: 36px 24px;
+      position: relative; z-index: 1;
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.85); text-decoration: none;
+      font-size: 0.83em; font-weight: 600; margin-bottom: 20px;
+      transition: color 0.15s;
+    }
+    .back-btn:hover { color: #fff; }
+    .page-header h1 { color: #fff; font-size: 1.8em; font-weight: 900; }
+    .page-header .sub { color: rgba(255,255,255,0.8); font-size: 0.88em; margin-top: 6px; }
+    .header-deco { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); font-size: 4em; opacity: 0.2; }
+
+    /* CONTENT */
+    .container { max-width: 780px; margin: 0 auto; padding: 36px 24px; }
+
+    /* COMMON MISSION */
+    .common-mission {
+      background: linear-gradient(135deg, #E8F5E0 0%, #D8F0CC 100%);
+      border: 2px solid #A8D898;
+      border-radius: 20px; padding: 28px; margin-bottom: 36px;
+    }
+    .common-mission h2 { font-size: 1.05em; font-weight: 800; color: #3A6A30; margin-bottom: 16px; }
+    .mission-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: rgba(255,255,255,0.7); border-radius: 12px;
+      padding: 14px 16px; margin-bottom: 10px;
+    }
+    .mission-item:last-child { margin-bottom: 0; }
+    .mission-num {
+      width: 26px; height: 26px; background: var(--green);
+      color: #fff; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 0.75em; font-weight: 900; flex-shrink: 0;
+    }
+    .mission-text { font-size: 0.88em; font-weight: 500; line-height: 1.6; }
+    .mission-text strong { color: #3A6A30; }
+
+    /* SECTION TITLE */
+    .section-title {
+      font-size: 0.95em; font-weight: 800; color: var(--text);
+      margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after {
+      content: ''; flex: 1; height: 2px; background: var(--road);
+    }
+
+    /* GROUP GRID */
+    .group-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (max-width: 560px) { .group-grid { grid-template-columns: 1fr; } }
+
+    /* GROUP CARD */
+    .group-card {
+      background: #fff; border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      overflow: hidden; border: 1.5px solid #F0E4D0;
+    }
+    .group-header {
+      padding: 16px 20px; display: flex;
+      align-items: center; justify-content: space-between;
+    }
+    .group-name { font-size: 1em; font-weight: 800; color: #fff; }
+    .group-badge {
+      background: rgba(255,255,255,0.25); color: #fff;
+      font-size: 0.7em; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .group-body { padding: 16px 20px; }
+    .mission-list { list-style: none; font-size: 0.84em; line-height: 2; }
+    .mission-list li { display: flex; align-items: flex-start; gap: 8px; }
+    .mission-list li::before { content: '🎯'; flex-shrink: 0; }
+    .mission-status {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #FFF8E8; border: 1px solid #F0D878;
+      border-radius: 8px; padding: 6px 12px;
+      font-size: 0.77em; font-weight: 600; color: #8A6A10;
+      margin-top: 12px;
+    }
+
+    /* Group colors */
+    .group-card:nth-child(1) .group-header { background: linear-gradient(135deg, #6EB5D9, #4A96BF); }
+    .group-card:nth-child(2) .group-header { background: linear-gradient(135deg, #E8834A, #C06030); }
+    .group-card:nth-child(3) .group-header { background: linear-gradient(135deg, #5A9E52, #3D7A35); }
+    .group-card:nth-child(4) .group-header { background: linear-gradient(135deg, #B06AB0, #8040A0); }
+    .group-card:nth-child(5) .group-header { background: linear-gradient(135deg, #D4A020, #A87810); }
+    .group-card:nth-child(6) .group-header { background: linear-gradient(135deg, #C85050, #A03030); }
+
+    /* SCORING */
+    .scoring-box {
+      background: #FFF0DC; border: 1.5px solid #F0C878;
+      border-radius: 16px; padding: 22px 24px; margin-top: 32px;
+    }
+    .scoring-box h3 { font-size: 0.95em; font-weight: 800; color: #7A4A10; margin-bottom: 14px; }
+    .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+    .score-item { background: rgba(255,255,255,0.7); border-radius: 10px; padding: 12px 16px; }
+    .score-label { font-size: 0.75em; color: #AA7820; font-weight: 700; margin-bottom: 4px; }
+    .score-value { font-size: 0.88em; font-weight: 600; }
+
+    /* FOOTER */
+    .page-footer {
+      text-align: center; padding: 28px 24px;
+      font-size: 0.8em; color: #AAA;
+      border-top: 1px dashed var(--road);
+    }
+    .page-footer a { color: var(--blue); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-inner">
+    <a href="playshop.html" class="back-btn">← 메인으로</a>
+    <h1>🎯 조별 미션</h1>
+    <div class="sub">2026.11.12 · 톡클라우드 가을 수학여행</div>
+  </div>
+  <div class="header-deco">🎯</div>
+</div>
+
+<div class="container">
+
+  <!-- 공통 미션 -->
+  <div class="common-mission">
+    <h2>🌟 공통 미션 (모든 조 공통)</h2>
+    <div class="mission-item">
+      <div class="mission-num">1</div>
+      <div class="mission-text"><strong>조별 단체 사진</strong> — 경주 랜드마크 앞에서 전원 포함 단체 사진 1장 촬영</div>
+    </div>
+    <div class="mission-item">
+      <div class="mission-num">2</div>
+      <div class="mission-text"><strong>사이좋은 증거</strong> — 조원 전원이 함께한 셀카 3장 이상 업로드</div>
+    </div>
+    <div class="mission-item">
+      <div class="mission-num">3</div>
+      <div class="mission-text"><strong>경주 먹방</strong> — 경주 음식 / 디저트 사진 인증</div>
+    </div>
+  </div>
+
+  <!-- 조별 미션 -->
+  <div class="section-title">📋 조별 미션</div>
+  <div class="group-grid">
+
+    <div class="group-card">
+      <div class="group-header">
+        <div class="group-name">🔵 1조</div>
+        <div class="group-badge">미션 발표 예정</div>
+      </div>
+      <div class="group-body">
+        <div class="mission-status">⏳ 조별 미션 업데이트 예정</div>
+      </div>
+    </div>
+
+    <div class="group-card">
+      <div class="group-header">
+        <div class="group-name">🟠 2조</div>
+        <div class="group-badge">미션 발표 예정</div>
+      </div>
+      <div class="group-body">
+        <div class="mission-status">⏳ 조별 미션 업데이트 예정</div>
+      </div>
+    </div>
+
+    <div class="group-card">
+      <div class="group-header">
+        <div class="group-name">🟢 3조</div>
+        <div class="group-badge">미션 발표 예정</div>
+      </div>
+      <div class="group-body">
+        <div class="mission-status">⏳ 조별 미션 업데이트 예정</div>
+      </div>
+    </div>
+
+    <div class="group-card">
+      <div class="group-header">
+        <div class="group-name">🟣 4조</div>
+        <div class="group-badge">미션 발표 예정</div>
+      </div>
+      <div class="group-body">
+        <div class="mission-status">⏳ 조별 미션 업데이트 예정</div>
+      </div>
+    </div>
+
+    <div class="group-card">
+      <div class="group-header">
+        <div class="group-name">🟡 5조</div>
+        <div class="group-badge">미션 발표 예정</div>
+      </div>
+      <div class="group-body">
+        <div class="mission-status">⏳ 조별 미션 업데이트 예정</div>
+      </div>
+    </div>
+
+    <div class="group-card">
+      <div class="group-header">
+        <div class="group-name">🔴 6조</div>
+        <div class="group-badge">미션 발표 예정</div>
+      </div>
+      <div class="group-body">
+        <div class="mission-status">⏳ 조별 미션 업데이트 예정</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 점수 안내 -->
+  <div class="scoring-box">
+    <h3>🏆 점수 안내</h3>
+    <div class="score-grid">
+      <div class="score-item">
+        <div class="score-label">공통 미션 완료</div>
+        <div class="score-value">각 10점</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">조별 미션 완료</div>
+        <div class="score-value">각 20점</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">보너스 미션</div>
+        <div class="score-value">추후 공개</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">제출 마감</div>
+        <div class="score-value">방탈출 시작 전</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <a href="playshop.html">← 메인으로 돌아가기</a>
+</div>
+
+</body>
+</html>
